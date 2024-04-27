@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using QRCodeAttendance.Application.Token;
-using QRCodeAttendance.Domain.Entities;
-using QRCodeAttendance.Infrastructure.Data;
+using QRCodeAttendance.QRCodeAttendance.Application.Token;
+using QRCodeAttendance.QRCodeAttendance.Domain.Entities;
+using QRCodeAttendance.QRCodeAttendance.Infrastructure.Data;
 using Serilog;
 
-namespace QRCodeAttendance.Application.User;
+namespace QRCodeAttendance.QRCodeAttendance.Application.User;
 
 public class UserService(DataContext _context,
     ITokenService _tokenService) : IUserService

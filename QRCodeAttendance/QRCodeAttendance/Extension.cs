@@ -2,12 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using QRCodeAttendance.Application.Token;
-using QRCodeAttendance.Application.User;
-using QRCodeAttendance.Infrastructure.Constant;
-using QRCodeAttendance.Infrastructure.Data;
+using QRCodeAttendance.QRCodeAttendance.Application.Token;
+using QRCodeAttendance.QRCodeAttendance.Application.User;
+using QRCodeAttendance.QRCodeAttendance.Infrastructure.Constant;
+using QRCodeAttendance.QRCodeAttendance.Infrastructure.Data;
 
-namespace QRCodeAttendance;
+namespace QRCodeAttendance.QRCodeAttendance;
 public static class Extension
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, ConfigurationManager configuration)
@@ -24,7 +24,7 @@ public static class Extension
 
         services.AddSwaggerGen(c =>
         {
-            c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "qrcodeattendance", Version = "v1" });
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "qrcodeattendance", Version = "v1" });
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
                 Description = @"JWT Bearer",
