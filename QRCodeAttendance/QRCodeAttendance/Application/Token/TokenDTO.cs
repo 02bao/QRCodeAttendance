@@ -1,4 +1,4 @@
-﻿namespace QRCodeAttendance.Application.Token;
+﻿namespace QRCodeAttendance.QRCodeAttendance.Application.Token;
 internal class TokenDTO
 {
 }

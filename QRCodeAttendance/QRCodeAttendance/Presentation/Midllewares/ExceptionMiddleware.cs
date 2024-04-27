@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Net;
 
-namespace QRCodeAttendance.Presentation.Midllewares;
+namespace QRCodeAttendance.QRCodeAttendance.Presentation.Midllewares;
 
 public class ExceptionMiddleware
 {

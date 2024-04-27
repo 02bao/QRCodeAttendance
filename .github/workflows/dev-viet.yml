@@ -3,7 +3,7 @@ name: Build and Push Docker Image
 on:
   push:
     branches:
-      - master
+      - dev-viet
 
 jobs:
   build-and-push:
@@ -19,7 +19,7 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Build the Docker image
-        run: docker build --platform=linux/amd64 -t 20522153/thaibaoattendance:latest .
+        run: docker build --platform=linux/amd64 -t 20522153/thaibaoattendance:latest ./QRCodeAttendance
 
       - name: Log in to Docker Hub
         run: docker login -u 20522153 -p 123456789

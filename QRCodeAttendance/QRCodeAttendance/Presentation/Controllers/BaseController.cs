@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace QRCodeAttendance.Presentation.Controllers;
+namespace QRCodeAttendance.QRCodeAttendance.Presentation.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
