@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using QRCodeAttendance.Presentation.Filters;
 using QRCodeAttendance.QRCodeAttendance.Application.User;
+using QRCodeAttendance.QRCodeAttendance.Presentation.Controllers;
+using QRCodeAttendance.QRCodeAttendance.Presentation.Filters;
 using QRCodeAttendance.QRCodeAttendance.Presentation.Models;
 
-namespace QRCodeAttendance.QRCodeAttendance.Presentation.Controllers;
+namespace QRCodeAttendance.Presentation.Controllers;
 
 public class UserController(IUserService userService) : BaseController
 {
