@@ -1,4 +1,4 @@
-﻿namespace QRCodeAttendance.QRCodeAttendance.Application.User;
+﻿namespace QRCodeAttendance.Application.User;
 
 public interface IUserService
 {

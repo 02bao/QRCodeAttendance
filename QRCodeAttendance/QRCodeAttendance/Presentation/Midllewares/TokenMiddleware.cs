@@ -1,6 +1,6 @@
-﻿using QRCodeAttendance.QRCodeAttendance.Application.Token;
+﻿using QRCodeAttendance.Application.Token;
 
-namespace QRCodeAttendance.QRCodeAttendance.Presentation.Midllewares;
+namespace QRCodeAttendance.Presentation.Midllewares;
 
 public class TokenMiddleware
 {

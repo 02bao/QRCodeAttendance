@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace QRCodeAttendance.QRCodeAttendance.Domain.Entities;
+namespace QRCodeAttendance.Domain.Entities;
 
 public class SqlUser
 {

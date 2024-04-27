@@ -2,12 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using QRCodeAttendance.QRCodeAttendance.Application.Token;
-using QRCodeAttendance.QRCodeAttendance.Application.User;
-using QRCodeAttendance.QRCodeAttendance.Infrastructure.Constant;
-using QRCodeAttendance.QRCodeAttendance.Infrastructure.Data;
+using QRCodeAttendance.Application.Token;
+using QRCodeAttendance.Application.User;
+using QRCodeAttendance.Infrastructure.Constant;
+using QRCodeAttendance.Infrastructure.Data;
 
-namespace QRCodeAttendance.QRCodeAttendance;
+namespace QRCodeAttendance;
 public static class Extension
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, ConfigurationManager configuration)
@@ -62,7 +62,7 @@ public static class Extension
         {
             opt.SaveToken = true;
             opt.RequireHttpsMetadata = false;
-            opt.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+            opt.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,
                 ValidateAudience = true,

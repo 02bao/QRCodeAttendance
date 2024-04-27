@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using QRCodeAttendance.QRCodeAttendance.Application.User;
-using QRCodeAttendance.QRCodeAttendance.Presentation.Controllers;
-using QRCodeAttendance.QRCodeAttendance.Presentation.Filters;
-using QRCodeAttendance.QRCodeAttendance.Presentation.Models;
+using QRCodeAttendance.Application.User;
+using QRCodeAttendance.Presentation.Filters;
+using QRCodeAttendance.Presentation.Models;
 
 namespace QRCodeAttendance.Presentation.Controllers;
 

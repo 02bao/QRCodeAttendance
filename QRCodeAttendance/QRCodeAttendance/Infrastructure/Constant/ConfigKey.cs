@@ -1,4 +1,4 @@
-﻿namespace QRCodeAttendance.QRCodeAttendance.Infrastructure.Constant;
+﻿namespace QRCodeAttendance.Infrastructure.Constant;
 
 public class ConfigKey
 {

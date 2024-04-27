@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using QRCodeAttendance.QRCodeAttendance.Domain.Entities;
+using QRCodeAttendance.Domain.Entities;
 
-namespace QRCodeAttendance.QRCodeAttendance.Infrastructure.Data;
+namespace QRCodeAttendance.Infrastructure.Data;
 
 public class DataContext : DbContext
 {

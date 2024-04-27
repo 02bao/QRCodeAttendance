@@ -1,6 +1,6 @@
-﻿using QRCodeAttendance.QRCodeAttendance.Application.Token;
+﻿using QRCodeAttendance.Application.Token;
 
-namespace QRCodeAttendance.QRCodeAttendance.Application.User;
+namespace QRCodeAttendance.Application.User;
 
 public class UserDTO
 {

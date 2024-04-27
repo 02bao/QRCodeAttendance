@@ -1,14 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using QRCodeAttendance.QRCodeAttendance.Domain.Entities;
-using QRCodeAttendance.QRCodeAttendance.Infrastructure.Constant;
-using QRCodeAttendance.QRCodeAttendance.Infrastructure.Data;
+using QRCodeAttendance.Domain.Entities;
+using QRCodeAttendance.Infrastructure.Constant;
+using QRCodeAttendance.Infrastructure.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace QRCodeAttendance.QRCodeAttendance.Application.Token;
+namespace QRCodeAttendance.Application.Token;
 public class TokenService(DataContext context) : ITokenService
 {
     public async Task<TokenItem> GenerateToken(SqlUser user, string role)

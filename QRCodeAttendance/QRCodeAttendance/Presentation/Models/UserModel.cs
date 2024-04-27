@@ -1,4 +1,4 @@
-﻿namespace QRCodeAttendance.QRCodeAttendance.Presentation.Models;
+﻿namespace QRCodeAttendance.Presentation.Models;
 
 public class UserModel
 {

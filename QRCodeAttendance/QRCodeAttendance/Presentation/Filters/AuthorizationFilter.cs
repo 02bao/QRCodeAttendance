@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace QRCodeAttendance.QRCodeAttendance.Presentation.Filters;
+namespace QRCodeAttendance.Presentation.Filters;
 
 public class RoleAttribute : Attribute, IAuthorizationFilter
 {

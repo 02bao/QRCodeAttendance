@@ -1,6 +1,6 @@
-﻿using QRCodeAttendance.QRCodeAttendance.Domain.Entities;
+﻿using QRCodeAttendance.Domain.Entities;
 
-namespace QRCodeAttendance.QRCodeAttendance.Application.Token;
+namespace QRCodeAttendance.Application.Token;
 public interface ITokenService
 {
     Task<SqlToken> CreateToken(string accessToken, string refreshToken, long userId);

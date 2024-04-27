@@ -1,5 +1,4 @@
-using QRCodeAttendance.QRCodeAttendance;
-using QRCodeAttendance.QRCodeAttendance.Presentation.Midllewares;
+using QRCodeAttendance.Presentation.Midllewares;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
 
