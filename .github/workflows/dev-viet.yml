@@ -19,8 +19,7 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Build the Docker image
-        run: docker build --platform=linux/amd64 -t 20522153/thaibaoattendance:latest ./QRCodeAttendance
-
+        run: docker build --platform=linux/amd64 -t 20522153/thaibaoattendance:latest ./
       - name: Log in to Docker Hub
         run: docker login -u 20522153 -p 123456789
 
