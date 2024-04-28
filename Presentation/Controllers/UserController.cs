@@ -5,11 +5,8 @@ using QRCodeAttendance.Presentation.Models;
 
 namespace QRCodeAttendance.Presentation.Controllers;
 
-public class UserController(IUserService userService) : BaseController
+public class UserController(IUserService _userService) : BaseController
 {
-
-    private readonly IUserService _userService = userService;
-
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] UserModel model)
     {
