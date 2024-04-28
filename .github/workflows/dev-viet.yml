@@ -25,3 +25,6 @@ jobs:
 
       - name: Push Docker image to Docker Hub
         run: docker push 20522153/thaibaoattendance:latest 
+
+      - name: trigger render
+        run:  curl https://api.render.com/deploy/srv-comt3621hbls73f90kdg?key=JPQf0v1ny_M
