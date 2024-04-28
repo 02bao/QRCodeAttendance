@@ -18,10 +18,10 @@
 ## Deployment:
 
 1. **Backend:**
-   - [View Our Swagger](https://thaibaoattendance-latest.onrender.com){target="_blank"}
+   - [View Our Swagger](https://thaibaoattendance-latest.onrender.com)
 
 2. **Frontend:**
-   - [View Our Website](https://thaibaoattendance-latest.vercel.app){target="_blank"}
+   - [View Our Website](https://thaibaoattendance-latest.vercel.app)
 
 
 
