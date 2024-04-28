@@ -31,4 +31,15 @@ public class UserController(IUserService userService) : BaseController
         return Ok(number);
     }
 
+    [HttpDelete("{id}")]
+    [Role("Admin")]
+    public async Task<IActionResult> Delete(long id)
+    {
+        bool success = await _userService.Delete(id);
+        if (success)
+        {
+            return Ok();
+        }
+        return BadRequest();
+    }
 }

@@ -50,4 +50,21 @@ public class UserService(DataContext _context,
         }
     }
 
+
+    public async Task<bool> Delete(long id)
+    {
+        SqlUser? user = await _context.Users
+            .Where(s => s.Id == id &&
+                        s.IsDeleted == false)
+            .FirstOrDefaultAsync();
+
+        if (user == null)
+        {
+            return false;
+        }
+
+        user.IsDeleted = true;
+        await _context.SaveChangesAsync();
+        return true;
+    }
 }

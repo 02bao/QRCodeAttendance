@@ -13,27 +13,38 @@ public class Program
                  .WriteTo.Console(theme: AnsiConsoleTheme.Code)
                  .WriteTo.File("logs/mylog.txt", rollingInterval: RollingInterval.Day)
                  .CreateLogger();
+        try
+        {
+            var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddControllers();
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+            builder.Services.AddServices();
+            builder.Services.AddInfrastructure(builder.Configuration);
 
-        var builder = WebApplication.CreateBuilder(args);
+            var app = builder.Build();
 
-        builder.Services.AddControllers();
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
-        builder.Services.AddServices();
-        builder.Services.AddInfrastructure(builder.Configuration);
+            app.UseCors("http");
 
-        var app = builder.Build();
+            app.UseTokenMiddleware();
+            app.UseExceptionHandlerMiddleware();
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
-        app.UseCors("http");
+            app.MapGet("/", (HttpContext context) =>
+            {
+                context.Response.Redirect("/swagger");
+                return;
+            });
 
-        app.UseTokenMiddleware();
-        app.UseExceptionHandlerMiddleware();
-        app.UseSwagger();
-        app.UseSwaggerUI();
+            app.MapControllers();
 
-        app.MapControllers();
-
-        app.Run();
+            app.Run();
+        }
+        catch (Exception e)
+        {
+            Log.Error(e.Message);
+        }
     }
 }

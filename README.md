@@ -3,8 +3,6 @@
 
 ## Members:
 
-Before proceeding, ensure you have the following team members ready:
-
 - Project Manager: Phạm Quang Việt.
 - Developers: Lương Thái Bảo.
 - Database Administrator: Lương Thái Bảo.
@@ -29,21 +27,13 @@ Before proceeding, ensure you have the following team members ready:
 
 ## About this Project:
 
-QRCodeAttendance is an innovative solution designed to streamline attendance management within organizations. By utilizing QR code technology, this system offers a modern approach to track attendance efficiently.
+QRCodeAttendance is an innovative and comprehensive solution that streamlines attendance management within organizations by utilizing QR code technology, offering a modern approach to efficiently track attendance while also providing modules for managing departments, employees, positions, and performance evaluations.
 
 ## Why?
 
 The QRCodeAttendance project aims to revolutionize traditional attendance tracking methods by introducing a user-friendly and technology-driven system. It simplifies attendance monitoring, enhances accuracy, and reduces administrative burden.
 
 As part of my personal portfolio, I invite feedback on this project and welcome suggestions for further enhancement.
-
-## The Project:
-
-QRCodeAttendance is a comprehensive solution consisting of modules for managing attendance, departments, employees, positions, and performance evaluations.
-
-## Quick Start Guide
-
-Welcome to QRCodeAttendance! This guide will walk you through the quick steps to get started with deploying and using the system.
 
 
 ## Features:
