@@ -1,23 +1,23 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using QRCodeAttendance.Application.Department;
 using QRCodeAttendance.Domain.Entities;
-using System.Data.SqlTypes;
+using QRCodeAttendance.Presentation.Models;
 
 namespace QRCodeAttendance.Presentation.Controllers;
 
 public class DepartmentController(IDepartmentService _departmentService) : BaseController
 {
     [HttpPost("CreateNewDepartment")]
-    public async Task<IActionResult> CreateNewDepartment(DepartmentCreate Create)
+    public async Task<IActionResult> CreateNewDepartment(DepartmentCreateModel model)
     {
-        bool IsSuccess =await _departmentService.CreateNewDepartment(Create);
-        return IsSuccess ? Ok(Create) : BadRequest();
+        bool IsSuccess = await _departmentService.CreateNewDepartment(model.Name, model.Description);
+        return IsSuccess ? Ok(model) : BadRequest();
     }
 
     [HttpGet("GetAll")]
     public async Task<IActionResult> GetAll()
     {
-        List<SqlDepartment> department = await _departmentService.GetAll(); 
+        List<SqlDepartment> department = await _departmentService.GetAll();
         return Ok(department);
     }
 
@@ -25,6 +25,10 @@ public class DepartmentController(IDepartmentService _departmentService) : BaseC
     public async Task<IActionResult> GetById(long Id)
     {
         SqlDepartment? department = await _departmentService.GetById(Id);
+        if (department == null)
+        {
+            return NotFound();
+        }
         return Ok(department);
     }
 

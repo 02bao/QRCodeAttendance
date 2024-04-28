@@ -11,4 +11,5 @@ public class SqlDepartment
     public int TotalEmployees { get; set; } = 0;
     public int TotalPositions { get; set; } = 0;
     public List<SqlPosition>? Position { get; set; }
+    public bool IsDeleted { get; set; } = false;
 }

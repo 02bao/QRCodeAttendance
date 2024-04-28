@@ -7,39 +7,39 @@ namespace QRCodeAttendance.Application.Department;
 public class DepartmentService(
     DataContext _context) : IDepartmentService
 {
-    public async Task<bool> CreateNewDepartment(DepartmentCreate Create)
+    public async Task<bool> CreateNewDepartment(string Name, string Description)
     {
-        SqlDepartment? department = await _context.Departments.Where(s => s.Name == Create.Name).FirstOrDefaultAsync();
-        if(department != null) { return false; }
-        SqlDepartment NewDepartment = new SqlDepartment()
+        SqlDepartment? department = await _context.Departments.Where(s => s.Name == Name && s.IsDeleted == false).FirstOrDefaultAsync();
+        if (department != null) { return false; }
+        SqlDepartment NewDepartment = new()
         {
-            Name = Create.Name,
-            Description = Create.Description,
+            Name = Name,
+            Description = Description,
         };
-        _context.Departments.Add(NewDepartment);
+        await _context.Departments.AddAsync(NewDepartment);
         await _context.SaveChangesAsync();
         return true;
     }
 
     public async Task<bool> DeleteById(long Id)
     {
-        SqlDepartment? department = await _context.Departments.Where(s => s.Id == Id).FirstOrDefaultAsync();
-        if(department == null) { return false; }
-         _context.Departments.Remove(department);
+        SqlDepartment? department = await _context.Departments.Where(s => s.Id == Id && s.IsDeleted == false).FirstOrDefaultAsync();
+        if (department == null) { return false; }
+        department.IsDeleted = true;
         await _context.SaveChangesAsync();
         return true;
     }
 
     public async Task<List<SqlDepartment>> GetAll()
     {
-       List<SqlDepartment>? NewDepart = await _context.Departments.ToListAsync();
-        return NewDepart;
+        List<SqlDepartment> deps = await _context.Departments.Where(s => s.IsDeleted == false).ToListAsync();
+        return deps;
     }
 
-    public async Task<SqlDepartment> GetById(long Id)
+    public async Task<SqlDepartment?> GetById(long Id)
     {
-        SqlDepartment? department = await _context.Departments.Where(s => s.Id == Id).FirstOrDefaultAsync();
-        if(department == null) { return null; }
+        SqlDepartment? department = await _context.Departments.Where(s => s.Id == Id && s.IsDeleted == false).FirstOrDefaultAsync();
+        if (department == null) { return null; }
         return department;
     }
 
@@ -59,6 +59,4 @@ public class DepartmentService(
         await _context.SaveChangesAsync();
         return true;
     }
-
-    
 }
