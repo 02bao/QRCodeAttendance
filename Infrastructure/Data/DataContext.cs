@@ -12,6 +12,7 @@ public class DataContext : DbContext
     public DbSet<SqlUser> Users { get; set; }
     public DbSet<SqlRole> Roles { get; set; }
     public DbSet<SqlToken> Tokens { get; set; }
+    public DbSet<SqlDepartment> Departments { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
