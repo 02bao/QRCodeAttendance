@@ -11,15 +11,14 @@ public class PositionService(
     {
         SqlDepartment? department = await _context.Departments.Where(s => s.Id == DepartmentId)
                                                               .FirstOrDefaultAsync();
-        if(department == null) { return false; }
-        SqlPosition NewPosition = new SqlPosition()
+        if (department == null) { return false; }
+        SqlPosition NewPosition = new()
         {
             Department = department,
             PositionName = Create.PositionName,
             Description = Create.Description,
         };
         _context.Positions.Add(NewPosition);
-        department.TotalPositions += 1;
         await _context.SaveChangesAsync();
         return true;
     }
@@ -29,9 +28,8 @@ public class PositionService(
         SqlPosition? position = await _context.Positions.Include(s => s.Department)
                                                         .Where(s => s.Id == Id)
                                                         .FirstOrDefaultAsync();
-        if(position == null) { return false; }
+        if (position == null) { return false; }
         _context.Positions.Remove(position);
-        position.Department.TotalPositions -= 1;
         await _context.SaveChangesAsync();
         return true;
     }
@@ -43,10 +41,10 @@ public class PositionService(
 
     public async Task<List<SqlPosition>> GetByDepartmentId(long DepartmentId)
     {
-        List<SqlPosition>? NewPosi = new List<SqlPosition>();
+        List<SqlPosition>? NewPosi = new();
         List<SqlPosition>? position = await _context.Positions.Where(s => s.Department.Id == DepartmentId).ToListAsync();
-        if(position == null) { return NewPosi; }
-        foreach(var newposi in  position)
+        if (position == null) { return NewPosi; }
+        foreach (var newposi in position)
         {
             NewPosi.Add(new SqlPosition()
             {
@@ -54,7 +52,6 @@ public class PositionService(
                 Department = newposi.Department,
                 PositionName = newposi.PositionName,
                 Description = newposi.Description,
-                EmployeeCount = newposi.EmployeeCount,
             });
         }
         return NewPosi;
@@ -62,8 +59,8 @@ public class PositionService(
 
     public async Task<SqlPosition> GetById(long Id)
     {
-        SqlPosition? NewPosi = new SqlPosition();
-        SqlPosition? position =  await _context.Positions.Where(s => s.Id == Id).FirstOrDefaultAsync();
+        SqlPosition? NewPosi = new();
+        SqlPosition? position = await _context.Positions.Where(s => s.Id == Id).FirstOrDefaultAsync();
         if (position == null) { return NewPosi; }
         return position;
     }
@@ -72,14 +69,13 @@ public class PositionService(
     {
         SqlPosition? position = await _context.Positions.Include(s => s.Department)
                                                         .Where(s => s.Id == PositionId)
-                                                        .FirstOrDefaultAsync();  
-        if(position == null) { return false; }
-        SqlPosition NewPosi = new SqlPosition()
+                                                        .FirstOrDefaultAsync();
+        if (position == null) { return false; }
+        SqlPosition NewPosi = new()
         {
             Department = position.Department,
             PositionName = Positions.PositionName,
             Description = Positions.Description,
-            EmployeeCount = Positions.EmployeeCount,
         };
         _context.Positions.Add(NewPosi);
         await _context.SaveChangesAsync();

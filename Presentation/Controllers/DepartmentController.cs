@@ -1,48 +1,47 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using QRCodeAttendance.Application.Department;
-using QRCodeAttendance.Domain.Entities;
 using QRCodeAttendance.Presentation.Models;
 
 namespace QRCodeAttendance.Presentation.Controllers;
 
 public class DepartmentController(IDepartmentService _departmentService) : BaseController
 {
-    [HttpPost("CreateNewDepartment")]
+    [HttpPost("")]
     public async Task<IActionResult> CreateNewDepartment(DepartmentCreateModel model)
     {
         bool IsSuccess = await _departmentService.CreateNewDepartment(model.Name, model.Description);
         return IsSuccess ? Ok(model) : BadRequest();
     }
 
-    [HttpGet("GetAll")]
+    [HttpGet("")]
     public async Task<IActionResult> GetAll()
     {
-        List<SqlDepartment> department = await _departmentService.GetAll();
-        return Ok(department);
+        List<DepartmentItemDTO> dtos = await _departmentService.GetAll();
+        return Ok(dtos);
     }
 
-    [HttpGet("GetById")]
+    [HttpGet("{Id}")]
     public async Task<IActionResult> GetById(long Id)
     {
-        SqlDepartment? department = await _departmentService.GetById(Id);
-        if (department == null)
+        DepartmentItemDTO? dto = await _departmentService.GetById(Id);
+        if (dto == null)
         {
             return NotFound();
         }
-        return Ok(department);
+        return Ok(dto);
     }
 
-    [HttpPut("Update")]
-    public async Task<IActionResult> Update(long DepartmentId, DepartmentUpdate Departments)
+    [HttpPut("{Id}")]
+    public async Task<IActionResult> Update(long Id, DepartmentUpdateModel model)
     {
-        bool IsSuccess = await _departmentService.Update(DepartmentId, Departments);
-        return IsSuccess ? Ok(IsSuccess) : BadRequest();
+        bool IsSuccess = await _departmentService.Update(Id, model.Name, model.Description);
+        return IsSuccess ? Ok(Id) : BadRequest();
     }
 
-    [HttpDelete("Delete")]
+    [HttpDelete("{Id}")]
     public async Task<IActionResult> Delete(long Id)
     {
         bool IsSuccess = await _departmentService.DeleteById(Id);
-        return IsSuccess ? Ok(IsSuccess) : BadRequest();
+        return IsSuccess ? Ok(Id) : BadRequest();
     }
 }

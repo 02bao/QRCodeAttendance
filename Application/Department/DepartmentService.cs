@@ -9,7 +9,9 @@ public class DepartmentService(
 {
     public async Task<bool> CreateNewDepartment(string Name, string Description)
     {
-        SqlDepartment? department = await _context.Departments.Where(s => s.Name == Name && s.IsDeleted == false).FirstOrDefaultAsync();
+        SqlDepartment? department = await _context.Departments
+            .Where(s => s.Name == Name && s.IsDeleted == false).FirstOrDefaultAsync();
+
         if (department != null) { return false; }
         SqlDepartment NewDepartment = new()
         {
@@ -23,39 +25,55 @@ public class DepartmentService(
 
     public async Task<bool> DeleteById(long Id)
     {
-        SqlDepartment? department = await _context.Departments.Where(s => s.Id == Id && s.IsDeleted == false).FirstOrDefaultAsync();
+        SqlDepartment? department = await _context.Departments
+            .Where(s => s.Id == Id && s.IsDeleted == false).FirstOrDefaultAsync();
         if (department == null) { return false; }
         department.IsDeleted = true;
         await _context.SaveChangesAsync();
         return true;
     }
 
-    public async Task<List<SqlDepartment>> GetAll()
+    public async Task<List<DepartmentItemDTO>> GetAll()
     {
-        List<SqlDepartment> deps = await _context.Departments.Where(s => s.IsDeleted == false).ToListAsync();
-        return deps;
+        List<SqlDepartment> deps = await _context.Departments
+            .Where(s => s.IsDeleted == false)
+            .Include(s => s.Position)
+            .ToListAsync();
+
+        List<DepartmentItemDTO> dtos = deps.Select(s => s.ToDTO()).ToList();
+
+        return dtos;
     }
 
-    public async Task<SqlDepartment?> GetById(long Id)
+    public async Task<DepartmentItemDTO?> GetById(long Id)
     {
-        SqlDepartment? department = await _context.Departments.Where(s => s.Id == Id && s.IsDeleted == false).FirstOrDefaultAsync();
+        SqlDepartment? department = await _context.Departments
+            .Where(s => s.Id == Id && s.IsDeleted == false)
+            .Include(s => s.Position)
+            .FirstOrDefaultAsync();
         if (department == null) { return null; }
-        return department;
+
+        DepartmentItemDTO dto = department.ToDTO();
+        return dto;
     }
 
-    public async Task<bool> Update(long DepartmentId, DepartmentUpdate Departments)
+    public async Task<bool> Update(long DepartmentId, string? Name, string? Description)
     {
-       SqlDepartment? department = await _context.Departments.Where(s => s.Id == DepartmentId)
-                                                             .FirstOrDefaultAsync();
-        if( department == null) { return false; }
-        SqlDepartment? NewDepart = new SqlDepartment()
+        SqlDepartment? department = await _context.Departments
+            .Where(s => s.Id == DepartmentId && s.IsDeleted == false).FirstOrDefaultAsync();
+
+        if (department == null) { return false; }
+
+        if (!string.IsNullOrEmpty(Name))
         {
-            Name = Departments.Name,
-            Description = Departments.Description,
-            TotalEmployees = Departments.TotalEmployees,
-            TotalPositions = Departments.TotalPositions,
-        };
-        _context.Departments.Add(NewDepart);
+            department.Name = Name;
+        }
+
+        if (!string.IsNullOrEmpty(Description))
+        {
+            department.Description = Description;
+        }
+
         await _context.SaveChangesAsync();
         return true;
     }
