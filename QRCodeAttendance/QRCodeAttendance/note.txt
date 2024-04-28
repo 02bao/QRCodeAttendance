@@ -1,1 +1,0 @@
-﻿Hệ thống quản lý điểm danh (attendance) cho nhân viên trong một công ty có nhiều phòng ban, mỗi phòng ban có nhiều vị trí (position), và mỗi vị trí lại có nhiều nhân viên. Hệ thống này cho phép nhân viên điểm danh bằng mã QR code, trong khi admin có khả năng xuất thống kê từ đầu tháng đến cuối tháng, liên quan đến tình trạng đi làm của các phòng ban và nhân viên.

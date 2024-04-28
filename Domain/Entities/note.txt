@@ -1,0 +1,9 @@
+﻿giờ tạo cho tôi vài cái entities sau:Department,position Employee
+ một department có nhiều roles, một role có nhiều employees, một employee chỉ thuộc một role và một department
+ tạo cho tôi hết api CRUD của department, role, employee luôn nha
+
+ Với lại tạo cho tôi api register, gửi email verify bằng mail, crud user profile luôn nha.
+
+ Lưu ý là ở dự án này tôi dùng softdelete, nghĩa là mỗi entity đều có 1 property IsDeleted, khi delete thì chỉ set IsDeleted = true, không xóa thật sự.
+ Tôi làm mẫu 1 cái Delete user nhé, còn lại anh tự làm nhé.
+ */
