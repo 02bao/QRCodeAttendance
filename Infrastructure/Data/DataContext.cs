@@ -13,6 +13,7 @@ public class DataContext : DbContext
     public DbSet<SqlRole> Roles { get; set; }
     public DbSet<SqlToken> Tokens { get; set; }
     public DbSet<SqlDepartment> Departments { get; set; }
+    public DbSet<SqlPosition> Positions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

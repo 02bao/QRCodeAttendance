@@ -43,9 +43,19 @@ public class DepartmentService(
         return department;
     }
 
-    public async Task<bool> Update(SqlDepartment Updates)
+    public async Task<bool> Update(long DepartmentId, DepartmentUpdate Departments)
     {
-        _context.Departments.Update(Updates);
+       SqlDepartment? department = await _context.Departments.Where(s => s.Id == DepartmentId)
+                                                             .FirstOrDefaultAsync();
+        if( department == null) { return false; }
+        SqlDepartment? NewDepart = new SqlDepartment()
+        {
+            Name = Departments.Name,
+            Description = Departments.Description,
+            TotalEmployees = Departments.TotalEmployees,
+            TotalPositions = Departments.TotalPositions,
+        };
+        _context.Departments.Add(NewDepart);
         await _context.SaveChangesAsync();
         return true;
     }

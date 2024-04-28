@@ -29,9 +29,9 @@ public class DepartmentController(IDepartmentService _departmentService) : BaseC
     }
 
     [HttpPut("Update")]
-    public async Task<IActionResult> Update(SqlDepartment Updates)
+    public async Task<IActionResult> Update(long DepartmentId, DepartmentUpdate Departments)
     {
-        bool IsSuccess = await _departmentService.Update(Updates);
+        bool IsSuccess = await _departmentService.Update(DepartmentId, Departments);
         return IsSuccess ? Ok(IsSuccess) : BadRequest();
     }
 
