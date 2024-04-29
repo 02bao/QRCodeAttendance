@@ -27,7 +27,7 @@ public class DataContext : DbContext
         modelBuilder.Entity<SqlUser>()
             .HasOne(x => x.Position)
             .WithMany(x => x.User)
-            .HasForeignKey(x => x.PositionId);
+            .IsRequired(false);
 
         // setup seed data cho role 
         modelBuilder.Entity<SqlRole>()

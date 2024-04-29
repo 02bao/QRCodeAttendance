@@ -167,7 +167,7 @@ namespace QRCodeAttendance.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<long>("PositionId")
+                    b.Property<long?>("PositionId")
                         .HasColumnType("bigint");
 
                     b.Property<long>("RoleId")
@@ -189,7 +189,6 @@ namespace QRCodeAttendance.Migrations
                             FullName = "Admin",
                             IsDeleted = false,
                             Password = "admin",
-                            PositionId = 0L,
                             RoleId = 1L
                         });
                 });
@@ -220,9 +219,7 @@ namespace QRCodeAttendance.Migrations
                 {
                     b.HasOne("QRCodeAttendance.Domain.Entities.SqlPosition", "Position")
                         .WithMany("User")
-                        .HasForeignKey("PositionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PositionId");
 
                     b.HasOne("QRCodeAttendance.Domain.Entities.SqlRole", "Role")
                         .WithMany("Users")
