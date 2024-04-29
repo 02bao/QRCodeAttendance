@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
 using QRCodeAttendance.Application.User;
 using QRCodeAttendance.Presentation.Filters;
 using QRCodeAttendance.Presentation.Models;
@@ -18,6 +19,13 @@ public class UserController(IUserService _userService) : BaseController
         }
 
         return Ok(response);
+    }
+
+    [HttpPost("Register")]
+    public async Task<IActionResult> Register(string AdminToken, UserModelRegister Model)
+    {
+        bool IsSuccess = await _userService.Register(AdminToken,Model.Email, Model.FullName, Model.Password, Model.IsWoman, Model.RoleId);
+        return IsSuccess? Ok(Model) : BadRequest();
     }
 
     [HttpGet("Test-authorization/{number}")]
