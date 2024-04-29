@@ -16,7 +16,7 @@ public class PositionService(
         SqlPosition NewPosi = new()
         {
             Department = department,
-            PositionName = Name,
+            Name = Name,
             Description = Description
         };
         await _context.Positions.AddAsync(NewPosi);
@@ -80,7 +80,7 @@ public class PositionService(
             .Where(s => s.Id == PositionId && s.IsDeleted == false)
             .FirstOrDefaultAsync();
         if (position == null) { return false; }
-        if (!string.IsNullOrEmpty(Name)) { position.PositionName = Name; }
+        if (!string.IsNullOrEmpty(Name)) { position.Name = Name; }
         if (!string.IsNullOrEmpty(Description)) { position.Description = Description; }
         await _context.SaveChangesAsync();
         return true;
