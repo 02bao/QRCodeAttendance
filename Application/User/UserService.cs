@@ -93,4 +93,28 @@ public class UserService(DataContext _context,
         await _context.SaveChangesAsync();
         return true;
     }
+
+    public async Task<List<UserDTO>> GetAll()
+    {
+        List<SqlUser> user = await _context.Users
+            .Where(s => s.IsDeleted ==  false)
+            .ToListAsync();
+        List<UserDTO> use = user.Select(s => s.ToDTO()).ToList();
+        return use;
+    }
+
+    public async Task<UserDTO?> GetById(long Id)
+    {
+        SqlUser? user = await _context.Users
+            .Where(s => s.Id == Id && s.IsDeleted == false)
+            .FirstOrDefaultAsync();
+        if(user == null) { return null; }
+        UserDTO use = user.ToDTO();
+        return use;
+    }
+
+    public Task<List<UserDTO>> GetByPositionId(long PositionId)
+    {
+        throw new NotImplementedException();
+    }
 }
