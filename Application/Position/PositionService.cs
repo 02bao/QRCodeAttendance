@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using QRCodeAttendance.Domain.Entities;
 using QRCodeAttendance.Infrastructure.Data;
 
@@ -10,10 +9,10 @@ public class PositionService(
 {
     public async Task<bool> CreateNewPositions(long DepartmentId, string Name, string Description)
     {
-        SqlDepartment? department = await _context.Departments.Where(s => s.Id == DepartmentId &&
-                                                              s.IsDeleted == false)
-                                                              .FirstOrDefaultAsync();  
-        if(department == null) { return false; }
+        SqlDepartment? department = await _context.Departments
+            .Where(s => s.Id == DepartmentId && s.IsDeleted == false)
+            .FirstOrDefaultAsync();
+        if (department == null) { return false; }
         SqlPosition NewPosi = new()
         {
             Department = department,
@@ -29,8 +28,8 @@ public class PositionService(
     {
         SqlPosition? position = await _context.Positions.Where(s => s.Id == Id &&
                                                          s.IsDeleted == false)
-                                                        .FirstOrDefaultAsync();     
-        if(position == null) { return false; }
+                                                        .FirstOrDefaultAsync();
+        if (position == null) { return false; }
         position.IsDeleted = true;
         await _context.SaveChangesAsync();
         return true;
@@ -43,43 +42,46 @@ public class PositionService(
                                                              .ToListAsync();
         List<PositionDTO> pos = position.Select(s => s.ToDTO()).ToList();
         return pos;
-                
     }
 
-    public async Task<List<PositionDTO>?> GetByDepartmentId(long DepartmentId)
+    public async Task<List<PositionDTO>> GetByDepartmentId(long DepartmentId)
     {
-       
-        List<SqlPosition>? positions = await _context.Positions.Include(s => s.Department)
-                                                                  .Where(s => s.Department.Id == DepartmentId &&
-                                                                  s.Department.IsDeleted == false &&
-                                                                  s.IsDeleted == false)
-                                                                  .Include(s => s.User)
-                                                                  .ToListAsync();
-        if(positions == null || positions.Count == 0) { return null; }
-        List<PositionDTO>? NewPosi = positions.Select(s => s.ToDTO()).ToList();
-        return NewPosi;
-                                                                    
+        List<PositionDTO> dtos = [];
+
+        List<SqlPosition>? positions = await _context.Positions
+            .Where(s => s.Department.Id == DepartmentId && s.IsDeleted == false)
+            .Include(s => s.User)
+            .Include(s => s.Department)
+            .ToListAsync();
+
+        if (positions == null || positions.Count == 0) { return dtos; }
+
+        dtos = positions.Select(s => s.ToDTO()).ToList();
+
+        return dtos;
     }
 
     public async Task<PositionDTO?> GetById(long Id)
     {
-        SqlPosition? position = await _context.Positions.Where(s => s.Id == Id &&
-                                                       s.IsDeleted == false)
-                                                       .Include(s => s.User)
-                                                       .FirstOrDefaultAsync();
-        if(position == null) { return null; }
-        PositionDTO Pos = position.ToDTO();
-        return Pos;
+        SqlPosition? position = await _context.Positions
+            .Where(s => s.Id == Id && s.IsDeleted == false)
+            .Include(s => s.User)
+            .FirstOrDefaultAsync();
+
+        if (position == null) { return null; }
+
+        PositionDTO dto = position.ToDTO();
+        return dto;
     }
 
     public async Task<bool> Update(long PositionId, string? Name, string? Description)
     {
-        SqlPosition? position = await _context.Positions.Where(s => s.Id == PositionId &&
-                                                         s.IsDeleted == false)
-                                                        .FirstOrDefaultAsync();
-        if(position == null) { return false;}
-        if(!string.IsNullOrEmpty(Name)) { position.PositionName = Name; }
-        if(!string.IsNullOrEmpty(Description)) {  position.Description = Description; }
+        SqlPosition? position = await _context.Positions
+            .Where(s => s.Id == PositionId && s.IsDeleted == false)
+            .FirstOrDefaultAsync();
+        if (position == null) { return false; }
+        if (!string.IsNullOrEmpty(Name)) { position.PositionName = Name; }
+        if (!string.IsNullOrEmpty(Description)) { position.Description = Description; }
         await _context.SaveChangesAsync();
         return true;
     }
