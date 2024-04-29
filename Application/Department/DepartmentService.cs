@@ -38,6 +38,7 @@ public class DepartmentService(
         List<SqlDepartment> deps = await _context.Departments
             .Where(s => s.IsDeleted == false)
             .Include(s => s.Position)
+            .Include(s => s.User)
             .ToListAsync();
 
         List<DepartmentItemDTO> dtos = deps.Select(s => s.ToDTO()).ToList();
@@ -49,6 +50,7 @@ public class DepartmentService(
         SqlDepartment? department = await _context.Departments
             .Where(s => s.Id == Id && s.IsDeleted == false)
             .Include(s => s.Position)
+            .Include(s => s.User)
             .FirstOrDefaultAsync();
         if (department == null) { return null; }
         DepartmentItemDTO dto = department.ToDTO();
