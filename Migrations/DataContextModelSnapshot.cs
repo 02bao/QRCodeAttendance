@@ -2,7 +2,6 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using QRCodeAttendance.Infrastructure.Data;
@@ -12,11 +11,9 @@ using QRCodeAttendance.Infrastructure.Data;
 namespace QRCodeAttendance.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240428122309_6")]
-    partial class _6
+    partial class DataContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,15 +34,12 @@ namespace QRCodeAttendance.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<int>("TotalEmployees")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("TotalPositions")
-                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -60,17 +54,17 @@ namespace QRCodeAttendance.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<long?>("DepartmentId")
+                    b.Property<long>("DepartmentId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("EmployeeCount")
-                        .HasColumnType("integer");
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
-                    b.Property<string>("PositionName")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -173,10 +167,15 @@ namespace QRCodeAttendance.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<long>("PositionId")
+                        .HasColumnType("bigint");
+
                     b.Property<long>("RoleId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PositionId");
 
                     b.HasIndex("RoleId");
 
@@ -190,6 +189,7 @@ namespace QRCodeAttendance.Migrations
                             FullName = "Admin",
                             IsDeleted = false,
                             Password = "admin",
+                            PositionId = 0L,
                             RoleId = 1L
                         });
                 });
@@ -197,8 +197,10 @@ namespace QRCodeAttendance.Migrations
             modelBuilder.Entity("QRCodeAttendance.Domain.Entities.SqlPosition", b =>
                 {
                     b.HasOne("QRCodeAttendance.Domain.Entities.SqlDepartment", "Department")
-                        .WithMany()
-                        .HasForeignKey("DepartmentId");
+                        .WithMany("Position")
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Department");
                 });
@@ -216,13 +218,31 @@ namespace QRCodeAttendance.Migrations
 
             modelBuilder.Entity("QRCodeAttendance.Domain.Entities.SqlUser", b =>
                 {
+                    b.HasOne("QRCodeAttendance.Domain.Entities.SqlPosition", "Position")
+                        .WithMany("User")
+                        .HasForeignKey("PositionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("QRCodeAttendance.Domain.Entities.SqlRole", "Role")
                         .WithMany("Users")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Position");
+
                     b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("QRCodeAttendance.Domain.Entities.SqlDepartment", b =>
+                {
+                    b.Navigation("Position");
+                });
+
+            modelBuilder.Entity("QRCodeAttendance.Domain.Entities.SqlPosition", b =>
+                {
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("QRCodeAttendance.Domain.Entities.SqlRole", b =>

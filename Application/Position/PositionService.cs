@@ -7,6 +7,23 @@ namespace QRCodeAttendance.Application.Position;
 public class PositionService(
     DataContext _context) : IPositionService
 {
+    public async Task<bool> AssignUserToPosition(long PositionId, long UserId)
+    {
+        SqlPosition? position = await _context.Positions
+            .Where(s => s.Id == PositionId && s.IsDeleted == false)
+            .Include(s => s.User)
+            .FirstOrDefaultAsync();
+        if(position == null ) { return false; }
+        SqlUser? user = await _context.Users
+            .Where(s => s.Id == UserId && s.IsDeleted == false)
+            .FirstOrDefaultAsync();
+        if (user == null) { return false; }
+        if(position.User.Contains(user)) { return false; }
+        position.User.Add(user);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
     public async Task<bool> CreateNewPositions(long DepartmentId, string Name, string Description)
     {
         SqlDepartment? department = await _context.Departments
@@ -37,9 +54,10 @@ public class PositionService(
 
     public async Task<List<PositionDTO>> GetAll()
     {
-        List<SqlPosition> position = await _context.Positions.Include(s => s.User)
-                                                             .Where(s => s.IsDeleted == false)
-                                                             .ToListAsync();
+        List<SqlPosition> position = await _context.Positions
+        .Where(s => s.IsDeleted == false)
+        .Include(s => s.User)
+        .ToListAsync();
         List<PositionDTO> pos = position.Select(s => s.ToDTO()).ToList();
         return pos;
     }
@@ -72,6 +90,23 @@ public class PositionService(
 
         PositionDTO dto = position.ToDTO();
         return dto;
+    }
+
+    public async Task<bool> RemoveUserFromPosition(long PositionId, long UserId)
+    {
+        SqlPosition? position = await _context.Positions
+            .Where(s => s.Id == PositionId && s.IsDeleted == false)
+            .Include(s => s.User)
+            .FirstOrDefaultAsync();
+        if (position == null) { return false; }
+        SqlUser? user = await _context.Users
+            .Where(s => s.Id == UserId && s.IsDeleted == false)
+            .FirstOrDefaultAsync();
+        if (user == null) { return false; }
+        if (!position.User.Contains(user)) { return false; }
+        position.User.Remove(user);
+        await _context.SaveChangesAsync();
+        return true;
     }
 
     public async Task<bool> Update(long PositionId, string? Name, string? Description)

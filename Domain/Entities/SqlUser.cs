@@ -11,6 +11,8 @@ public class SqlUser
     public string FullName { get; set; } = "";
     public bool IsDeleted { get; set; } = false;
     public long RoleId { get; set; }
+    public long PositionId { get; set; }
     public SqlRole Role { get; set; } = null!;
+    public SqlPosition Position { get; set; } = null!;
     public List<SqlToken> Tokens { get; set; } = [];
 }

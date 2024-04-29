@@ -23,6 +23,12 @@ public class DataContext : DbContext
             .WithMany(x => x.Users)
             .HasForeignKey(x => x.RoleId);
 
+        // setup 1 user có nhiều role và 1 role có nhiều user
+        modelBuilder.Entity<SqlUser>()
+            .HasOne(x => x.Position)
+            .WithMany(x => x.User)
+            .HasForeignKey(x => x.PositionId);
+
         // setup seed data cho role 
         modelBuilder.Entity<SqlRole>()
             .HasData(
