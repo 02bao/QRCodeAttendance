@@ -9,7 +9,7 @@ public static class PositionMapper
         return new PositionDTO
         {
             Id = entity.Id,
-            PositionName = entity.PositionName,
+            Name = entity.Name,
             Description = entity.Description,
             EmployeeCount = entity.User.Where(s => s.IsDeleted == false).Count(),
         };
