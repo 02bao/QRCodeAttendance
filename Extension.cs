@@ -89,6 +89,10 @@ public static class Extension
                     .AllowAnyHeader()
                     .AllowAnyMethod()
                     .AllowCredentials();
+                builder.WithOrigins("https://thaibaoattendance-latest.vercel.app")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
             });
         });
 
