@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace QRCodeAttendance.Migrations
 {
     /// <inheritdoc />
-    public partial class _1 : Migration
+    public partial class _10 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -76,7 +76,7 @@ namespace QRCodeAttendance.Migrations
                     FullName = table.Column<string>(type: "text", nullable: false),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
                     RoleId = table.Column<long>(type: "bigint", nullable: false),
-                    PositionId = table.Column<long>(type: "bigint", nullable: false)
+                    PositionId = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -85,8 +85,7 @@ namespace QRCodeAttendance.Migrations
                         name: "FK_Users_Positions_PositionId",
                         column: x => x.PositionId,
                         principalTable: "Positions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Users_Roles_RoleId",
                         column: x => x.RoleId,
@@ -131,7 +130,7 @@ namespace QRCodeAttendance.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "Email", "FullName", "IsDeleted", "Password", "PositionId", "RoleId" },
-                values: new object[] { 1L, "admin@gmail.com", "Admin", false, "admin", 0L, 1L });
+                values: new object[] { 1L, "admin@gmail.com", "Admin", false, "admin", null, 1L });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Positions_DepartmentId",
