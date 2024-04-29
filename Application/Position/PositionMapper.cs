@@ -11,7 +11,7 @@ public static class PositionMapper
             Id = entity.Id,
             Name = entity.Name,
             Description = entity.Description,
-            EmployeeCount = entity.User.Where(s => s.IsDeleted == false).Count(),
+            EmployeeCount = entity.Users.Where(s => s.IsDeleted == false).Count(),
         };
     }
 }

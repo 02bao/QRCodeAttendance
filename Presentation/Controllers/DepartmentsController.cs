@@ -1,23 +1,26 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using QRCodeAttendance.Application.Department;
+using QRCodeAttendance.Application.Position;
 using QRCodeAttendance.Presentation.Models;
 
 namespace QRCodeAttendance.Presentation.Controllers;
 
-public class DepartmentController(IDepartmentService _departmentService) : BaseController
+public class DepartmentsController(
+    IDepartmentService _departmentService,
+    IPositionService _positionService) : BaseController
 {
-    [HttpPost("")]
-    public async Task<IActionResult> CreateNewDepartment(DepartmentCreateModel model)
-    {
-        bool IsSuccess = await _departmentService.CreateNewDepartment(model.Name, model.Description);
-        return IsSuccess ? Ok(model) : BadRequest();
-    }
-
     [HttpGet("")]
     public async Task<IActionResult> GetAll()
     {
         List<DepartmentItemDTO> dtos = await _departmentService.GetAll();
         return Ok(dtos);
+    }
+
+    [HttpPost("")]
+    public async Task<IActionResult> CreateDepartment(DepartmentCreateModel model)
+    {
+        bool IsSuccess = await _departmentService.CreateNewDepartment(model.Name, model.Description);
+        return IsSuccess ? Ok(model) : BadRequest();
     }
 
     [HttpGet("{Id}")]
@@ -31,6 +34,7 @@ public class DepartmentController(IDepartmentService _departmentService) : BaseC
         return Ok(dto);
     }
 
+
     [HttpPut("{Id}")]
     public async Task<IActionResult> Update(long Id, DepartmentUpdateModel model)
     {
@@ -43,5 +47,19 @@ public class DepartmentController(IDepartmentService _departmentService) : BaseC
     {
         bool IsSuccess = await _departmentService.DeleteById(Id);
         return IsSuccess ? Ok(Id) : BadRequest();
+    }
+
+    [HttpGet("{Id}/positions")]
+    public async Task<IActionResult> GetPositionsByDepartmentId(long Id)
+    {
+        List<PositionDTO> dtos = await _positionService.GetPositionsByDepartmentId(Id);
+        return Ok(dtos);
+    }
+
+    [HttpPost("{Id}/positions")]
+    public async Task<IActionResult> CreatePosition(long Id, PositionCreateModel model)
+    {
+        bool IsSuccess = await _positionService.CreateNewPositions(Id, model.Name, model.Description);
+        return IsSuccess ? Ok(model) : BadRequest();
     }
 }

@@ -68,25 +68,28 @@ public class UserService(DataContext _context,
         return true;
     }
 
-    public async Task<bool> Register(string AdminToken, string Email, string Fullname, string Password, bool IsWomen,long RoleId)
+    public async Task<bool> Create(string Email, string FullName, string Password, bool IsWoman, long RoleId)
     {
-       SqlToken? validToken = await _context.Tokens
-            .Where(s => s.AccessToken == AdminToken)
-            .FirstOrDefaultAsync(); 
-        if(validToken == null) { return false; }
-        SqlUser? email = await _context.Users
-            .Where(s => s.Email == Email)
-            .FirstOrDefaultAsync();
-        if(email != null) { return false; }
-        SqlUser NewUser = new()
+        SqlUser? user = await _context.Users.Where(s => s.Email.CompareTo(Email) == 0).FirstOrDefaultAsync();
+        if (user != null)
+        {
+            return false;
+        }
+
+        SqlRole? role = await _context.Roles.Where(s => s.Id == RoleId).FirstOrDefaultAsync();
+        if (role == null)
+        {
+            return false;
+        }
+
+        user = new SqlUser
         {
             Email = Email,
-            FullName = Fullname,
+            FullName = FullName,
             Password = Password,
-            IsWoman = IsWomen,
-            RoleId = RoleId 
+            IsWoman = IsWoman,
+            Role = role
         };
-        await _context.Users.AddAsync(NewUser);
         await _context.SaveChangesAsync();
         return true;
     }
