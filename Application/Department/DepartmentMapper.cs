@@ -12,6 +12,7 @@ public static class DepartmentMapper
             Name = entity.Name,
             Description = entity.Description,
             PositionCount = entity.Position.Where(s => s.IsDeleted == false).Count(),
+            EmployeeCount = entity.User.Where(s => s.IsDeleted == false).Count(),
         };
     }
 }
