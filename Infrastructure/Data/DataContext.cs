@@ -5,6 +5,7 @@ namespace QRCodeAttendance.Infrastructure.Data;
 
 public class DataContext : DbContext
 {
+    //add-migration daylaMessage -OutputDir Infrastructure\Migrations
     public DataContext(DbContextOptions<DataContext> options) : base(options)
     {
     }
@@ -46,4 +47,5 @@ public class DataContext : DbContext
                     RoleId = 1
                 });
     }
+
 }

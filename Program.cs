@@ -10,7 +10,7 @@ public class Program
     {
         Log.Logger = new LoggerConfiguration()
                  .MinimumLevel.Debug()
-                 .WriteTo.Console(theme: AnsiConsoleTheme.Code)
+                 .WriteTo.Console(theme: AnsiConsoleTheme.Sixteen, outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}")
                  .WriteTo.File("logs/mylog.txt", rollingInterval: RollingInterval.Day)
                  .CreateLogger();
         try
