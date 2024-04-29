@@ -13,7 +13,7 @@ public static class UserMapper
             Password = entity.Password,
             FullName = entity.FullName,
             IsWoman = entity.IsWoman,
-            RoleName = entity.Role.Name,
+            RoleId = entity.RoleId,
         };
     }
 }

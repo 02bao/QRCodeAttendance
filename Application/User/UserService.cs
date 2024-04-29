@@ -113,8 +113,15 @@ public class UserService(DataContext _context,
         return use;
     }
 
-    public Task<List<UserDTO>> GetByPositionId(long PositionId)
+    public async Task<List<UserDTO>> GetUserIdByPositionId(long PositionId)
     {
-        throw new NotImplementedException();
+        List<UserDTO> dtos = [];
+        List<SqlUser> users = await _context.Users
+            .Where(s => s.Position.Id == PositionId && s.IsDeleted == false)
+            .Include(s => s.Position)
+            .ToListAsync();
+        if(users == null || users.Count == 0) { return dtos; }
+        dtos = users.Select(s => s.ToDTO()).ToList();
+        return dtos;
     }
 }

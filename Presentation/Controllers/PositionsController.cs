@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using QRCodeAttendance.Application.Position;
+using QRCodeAttendance.Application.User;
 using QRCodeAttendance.Presentation.Models;
 
 namespace QRCodeAttendance.Presentation.Controllers;
 
 public class PositionsController(
-    IPositionService _positionService) : BaseController
+    IPositionService _positionService,
+    IUserService _userService) : BaseController
 {
     [HttpGet("")]
     public async Task<IActionResult> GetAll()
@@ -23,6 +25,13 @@ public class PositionsController(
             return NotFound();
         }
         return Ok(dto);
+    }
+
+    [HttpGet("{Id}/user")]
+    public async Task<IActionResult> GetUserIdByPositionId(long Id)
+    {
+        List<UserDTO> dtos = await _userService.GetUserIdByPositionId(Id);
+        return Ok(dtos);
     }
 
     [HttpPut("{Id}")]

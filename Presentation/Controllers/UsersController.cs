@@ -17,6 +17,24 @@ public class UsersController(
         return IsSuccess ? Ok(Model) : BadRequest();
     }
 
+    [HttpGet("")]
+    public async Task<IActionResult> GetAll()
+    {
+        List<UserDTO> dtos = await _userService.GetAll();
+        return Ok(dtos);
+    }
+
+    [HttpGet("{Id}")]
+    public async Task<IActionResult>? GetById(long Id)
+    {
+        UserDTO? dto = await _userService.GetById(Id);
+        if (dto == null)
+        {
+            return NotFound();
+        }
+        return Ok(dto);
+    }
+
     [HttpDelete("{id}")]
     [Role("Admin")]
     public async Task<IActionResult> Delete(long id)
@@ -32,7 +50,7 @@ public class UsersController(
     [HttpPut("{Id}/Positions/{PositionId}/assign")]
     public async Task<IActionResult> AssignUserToPosition(long Id, long PositionId)
     {
-        bool IsSuccess = await _positionService.AssignUserToPosition(PositionId, Id);
+        bool IsSuccess = await _positionService.AssignUserToPosition(Id,PositionId);
         return IsSuccess ? Ok(Id) : BadRequest();
     }
 
