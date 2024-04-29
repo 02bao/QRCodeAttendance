@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using QRCodeAttendance.Infrastructure.Data;
@@ -11,9 +12,11 @@ using QRCodeAttendance.Infrastructure.Data;
 namespace QRCodeAttendance.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240429085356_2")]
+    partial class _2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -176,16 +179,11 @@ namespace QRCodeAttendance.Migrations
                     b.Property<long>("RoleId")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("SqlDepartmentId")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
 
                     b.HasIndex("PositionId");
 
                     b.HasIndex("RoleId");
-
-                    b.HasIndex("SqlDepartmentId");
 
                     b.ToTable("Users");
 
@@ -236,10 +234,6 @@ namespace QRCodeAttendance.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("QRCodeAttendance.Domain.Entities.SqlDepartment", null)
-                        .WithMany("User")
-                        .HasForeignKey("SqlDepartmentId");
-
                     b.Navigation("Position");
 
                     b.Navigation("Role");
@@ -248,8 +242,6 @@ namespace QRCodeAttendance.Migrations
             modelBuilder.Entity("QRCodeAttendance.Domain.Entities.SqlDepartment", b =>
                 {
                     b.Navigation("Position");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("QRCodeAttendance.Domain.Entities.SqlPosition", b =>
