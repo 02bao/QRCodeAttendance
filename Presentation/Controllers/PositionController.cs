@@ -42,10 +42,10 @@ public class PositionController(
     }
 
     [HttpPut("{Id}")]
-    public async Task<IActionResult> Update(long PositionId, PositionUpdateModel model)
+    public async Task<IActionResult> Update(long Id, PositionUpdateModel model)
     {
-        bool IsSuccess = await _positionService.Update(PositionId, model.PositionName, model.Description);
-        return IsSuccess ? Ok(PositionId) : BadRequest();
+        bool IsSuccess = await _positionService.Update(Id, model.PositionName, model.Description);
+        return IsSuccess ? Ok(Id) : BadRequest();
     }
 
     [HttpDelete("{Id}")]
