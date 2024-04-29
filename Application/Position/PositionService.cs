@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 using QRCodeAttendance.Domain.Entities;
 using QRCodeAttendance.Infrastructure.Data;
 
@@ -7,77 +8,78 @@ namespace QRCodeAttendance.Application.Position;
 public class PositionService(
     DataContext _context) : IPositionService
 {
-    public async Task<bool> CreateNewPositions(long DepartmentId, PositionCreate Create)
+    public async Task<bool> CreateNewPositions(long DepartmentId, string Name, string Description)
     {
-        SqlDepartment? department = await _context.Departments.Where(s => s.Id == DepartmentId)
-                                                              .FirstOrDefaultAsync();
-        if (department == null) { return false; }
-        SqlPosition NewPosition = new()
+        SqlDepartment? department = await _context.Departments.Where(s => s.Id == DepartmentId &&
+                                                              s.IsDeleted == false)
+                                                              .FirstOrDefaultAsync();  
+        if(department == null) { return false; }
+        SqlPosition NewPosi = new()
         {
             Department = department,
-            PositionName = Create.PositionName,
-            Description = Create.Description,
+            PositionName = Name,
+            Description = Description
         };
-        _context.Positions.Add(NewPosition);
+        await _context.Positions.AddAsync(NewPosi);
         await _context.SaveChangesAsync();
         return true;
     }
 
     public async Task<bool> Delete(long Id)
     {
-        SqlPosition? position = await _context.Positions.Include(s => s.Department)
-                                                        .Where(s => s.Id == Id)
-                                                        .FirstOrDefaultAsync();
-        if (position == null) { return false; }
-        _context.Positions.Remove(position);
+        SqlPosition? position = await _context.Positions.Where(s => s.Id == Id &&
+                                                         s.IsDeleted == false)
+                                                        .FirstOrDefaultAsync();     
+        if(position == null) { return false; }
+        position.IsDeleted = true;
         await _context.SaveChangesAsync();
         return true;
     }
 
-    public async Task<List<SqlPosition>> GetAll()
+    public async Task<List<PositionDTO>> GetAll()
     {
-        return await _context.Positions.ToListAsync();
+        List<SqlPosition> position = await _context.Positions.Include(s => s.User)
+                                                             .Where(s => s.IsDeleted == false)
+                                                             .ToListAsync();
+        List<PositionDTO> pos = position.Select(s => s.ToDTO()).ToList();
+        return pos;
+                
     }
 
-    public async Task<List<SqlPosition>> GetByDepartmentId(long DepartmentId)
+    public async Task<List<PositionDTO>?> GetByDepartmentId(long DepartmentId)
     {
-        List<SqlPosition>? NewPosi = new();
-        List<SqlPosition>? position = await _context.Positions.Where(s => s.Department.Id == DepartmentId).ToListAsync();
-        if (position == null) { return NewPosi; }
-        foreach (var newposi in position)
-        {
-            NewPosi.Add(new SqlPosition()
-            {
-                Id = newposi.Id,
-                Department = newposi.Department,
-                PositionName = newposi.PositionName,
-                Description = newposi.Description,
-            });
-        }
+       
+        List<SqlPosition>? positions = await _context.Positions.Include(s => s.Department)
+                                                                  .Where(s => s.Department.Id == DepartmentId &&
+                                                                  s.Department.IsDeleted == false &&
+                                                                  s.IsDeleted == false)
+                                                                  .Include(s => s.User)
+                                                                  .ToListAsync();
+        if(positions == null || positions.Count == 0) { return null; }
+        List<PositionDTO>? NewPosi = positions.Select(s => s.ToDTO()).ToList();
         return NewPosi;
+                                                                    
     }
 
-    public async Task<SqlPosition> GetById(long Id)
+    public async Task<PositionDTO?> GetById(long Id)
     {
-        SqlPosition? NewPosi = new();
-        SqlPosition? position = await _context.Positions.Where(s => s.Id == Id).FirstOrDefaultAsync();
-        if (position == null) { return NewPosi; }
-        return position;
+        SqlPosition? position = await _context.Positions.Where(s => s.Id == Id &&
+                                                       s.IsDeleted == false)
+                                                       .Include(s => s.User)
+                                                       .FirstOrDefaultAsync();
+        if(position == null) { return null; }
+        PositionDTO Pos = position.ToDTO();
+        return Pos;
     }
 
-    public async Task<bool> Update(long PositionId, PositionUpdate Positions)
+    public async Task<bool> Update(long PositionId, string? Name, string? Description)
     {
-        SqlPosition? position = await _context.Positions.Include(s => s.Department)
-                                                        .Where(s => s.Id == PositionId)
+        SqlPosition? position = await _context.Positions.Where(s => s.Id == PositionId &&
+                                                         s.IsDeleted == false)
                                                         .FirstOrDefaultAsync();
-        if (position == null) { return false; }
-        SqlPosition NewPosi = new()
-        {
-            Department = position.Department,
-            PositionName = Positions.PositionName,
-            Description = Positions.Description,
-        };
-        _context.Positions.Add(NewPosi);
+        if(position == null) { return false;}
+        if(!string.IsNullOrEmpty(Name)) { position.PositionName = Name; }
+        if(!string.IsNullOrEmpty(Description)) {  position.Description = Description; }
         await _context.SaveChangesAsync();
         return true;
     }

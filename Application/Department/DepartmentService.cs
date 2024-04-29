@@ -41,7 +41,6 @@ public class DepartmentService(
             .ToListAsync();
 
         List<DepartmentItemDTO> dtos = deps.Select(s => s.ToDTO()).ToList();
-
         return dtos;
     }
 
@@ -52,7 +51,6 @@ public class DepartmentService(
             .Include(s => s.Position)
             .FirstOrDefaultAsync();
         if (department == null) { return null; }
-
         DepartmentItemDTO dto = department.ToDTO();
         return dto;
     }
