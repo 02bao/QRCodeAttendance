@@ -67,4 +67,30 @@ public class UserService(DataContext _context,
         await _context.SaveChangesAsync();
         return true;
     }
+
+    public async Task<bool> Create(string Email, string FullName, string Password, bool IsWoman, long RoleId)
+    {
+        SqlUser? user = await _context.Users.Where(s => s.Email.CompareTo(Email) == 0).FirstOrDefaultAsync();
+        if (user != null)
+        {
+            return false;
+        }
+
+        SqlRole? role = await _context.Roles.Where(s => s.Id == RoleId).FirstOrDefaultAsync();
+        if (role == null)
+        {
+            return false;
+        }
+
+        user = new SqlUser
+        {
+            Email = Email,
+            FullName = FullName,
+            Password = Password,
+            IsWoman = IsWoman,
+            Role = role
+        };
+        await _context.SaveChangesAsync();
+        return true;
+    }
 }

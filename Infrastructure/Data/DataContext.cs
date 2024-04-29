@@ -26,7 +26,7 @@ public class DataContext : DbContext
         // setup 1 user có nhiều role và 1 role có nhiều user
         modelBuilder.Entity<SqlUser>()
             .HasOne(x => x.Position)
-            .WithMany(x => x.User)
+            .WithMany(x => x.Users)
             .IsRequired(false);
 
         // setup seed data cho role 

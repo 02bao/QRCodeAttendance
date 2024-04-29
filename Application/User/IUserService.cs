@@ -4,4 +4,5 @@ public interface IUserService
 {
     Task<UserAuthenticate> Login(string Email, string Password);
     Task<bool> Delete(long id);
+    Task<bool> Create(string Email, string FullName, string Password, bool IsWoman, long RoleId);
 }
