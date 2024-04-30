@@ -1,0 +1,19 @@
+﻿
+Task 1. Rồi hôm nay có 1 vấn đề cần anh phải suy nghĩ.
+Ví dụ tôi có 1 department có 3 position, mỗi position lại có 3 employee.
+Trường hợp thứ nhất: Nếu tôi xóa department(set isdelete = true ấy) 
+thì tất cả các position và các employees bên trong nó có nên bị xóa theo không? Nghĩa là set isdelete = true cho nó luôn.
+Hay là mình nên gỡ mối quan hệ giữa 3 position và 9 emp ra khỏi department rồi mới xóa department.
+
+
+Rồi suy nghĩ xong thì làm task tiếp theo
+
+Task 2. Rồi mình có 1 api là assign user vào 1 position, nếu user đã được assign vào 1 position rồi thì không thể assign vào position khác nữa.
+thế thì anh suy nghĩ lúc mà bên frontend gọi api asign user vào position này á,
+bên fe phải gọi 1 api có ý nghĩa là: lấy tất cả user đang không có position nào, thì server trả về
+1 list các user đang không có position, thì lúc đó frontend mới chọn 1 user để assign vào position. phai không nào
+vậy nên anh viết api đó cho tôi nhé
+
+Task 3. ở trên task 2 là mối quan hệ position và user, còn mối quan hệ department và position anh cũng viết tương tự 1 cái api như thế nhé
+
+Task 4. Dashboard controller. Tôi đã viết miêu tả trong dashboard rồi ấy, anh cứ từ từ làm

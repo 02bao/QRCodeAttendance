@@ -66,6 +66,10 @@ public class DepartmentService(
 
         if (!string.IsNullOrEmpty(Name))
         {
+            bool ExistName = await _context.Departments
+                .Where(s => s.Name == Name && s.Id != DepartmentId && s.IsDeleted == false)
+                .AnyAsync();
+            if (ExistName) { return false; }
             department.Name = Name;
         }
 

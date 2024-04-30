@@ -1,4 +1,5 @@
-﻿using QRCodeAttendance.Domain.Entities;
+﻿using QRCodeAttendance.Application.Role;
+using QRCodeAttendance.Domain.Entities;
 
 namespace QRCodeAttendance.Application.User;
 
@@ -13,7 +14,7 @@ public static class UserMapper
             Password = entity.Password,
             FullName = entity.FullName,
             IsWoman = entity.IsWoman,
-            RoleId = entity.RoleId,
+            Role = entity.Role.ToDto()
         };
     }
 }

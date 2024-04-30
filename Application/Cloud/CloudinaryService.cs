@@ -1,7 +1,7 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using Serilog;
-namespace QRCodeAttendance.Application;
+namespace QRCodeAttendance.Application.Cloud;
 
 public class CloudinaryService
 {
@@ -13,7 +13,7 @@ public class CloudinaryService
             "414433899294356",
            "Ftv4-eQroBMkGXO9oEmAshTn5M0"
         );
-        _cloudinary = new Cloudinary( CloudinaryAccount );
+        _cloudinary = new Cloudinary(CloudinaryAccount);
         _cloudinary.Api.Secure = true;
     }
 
@@ -27,16 +27,21 @@ public class CloudinaryService
             }
             using (var stream = file.OpenReadStream())
             {
-                ImageUploadParams uploadParams = new ImageUploadParams
+                ImageUploadParams uploadParams = new()
                 {
                     File = new FileDescription(file.FileName, stream),
                     PublicId = Guid.NewGuid().ToString(),
-                    Folder = "review",
+                    Folder = "qrAttendance",
                 };
                 ImageUploadResult result = _cloudinary.Upload(uploadParams);
-                if (result.Error != null)
+                if (result.Error != null && result != null)
                 {
-                    Log.Error(result.Error.ToString());
+                    Log.Error(result.Error.ToString() ?? "Upload File to Cloudinary fail!");
+                    return "";
+                }
+                if (result == null)
+                {
+                    Log.Error("Upload File to Cloudinary return null");
                     return "";
                 }
                 return result.SecureUrl.ToString();
@@ -45,7 +50,7 @@ public class CloudinaryService
         catch (Exception ex)
         {
             Log.Error(ex.Message);
+            return "";
         }
-        return "";
     }
 }
