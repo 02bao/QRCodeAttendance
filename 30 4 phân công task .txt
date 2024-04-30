@@ -1,0 +1,12 @@
+﻿Them prop avatar vào user -> thì khi entity đã thay đổi thì các function, module khác nó cũng sẽ ảnh hưởng đôi chút
+nên là anh phải sửa lại code 1 chút đó -> nhớ viết api update user, update profile các kiểu, thay đổi password và admin thay đổi password
+nếu user tự đổi pws của mihfh thì phải nhập pwd cũ, còn nếu là admin mà muốn reset password thì ko cần biết pwd cũ của user đó
+
+
+tiếp theo là về nghiệp vụ, tôi đã thêm ràng buộc chỉ có admin mới có thể tạo user.
+thì tôi muốn anh thêm logic phần tạo user này, rằng sau khi tạo user xong thì sẽ gửi mail thông báo cho user đó, trong mai
+sẽ có một đường link xác thực, nếu user bấm vào link đó thì trạng thái user sẽ từ chưa được verify thành verified
+thế thì tôi gợi ý anh thêm 1 biến bool IsVerified vào user, và thêm 1 biến string VerifyToken vào user, khi tạo user
+thì anh sẽ tạo ra 1 token ngẫu nhiên, lưu vào VerifyToken, sau đó gửi mail cho user, trong mail sẽ có đường link
+http://localhost:3000/verify?token=VerifyToken, khi user bấm vào link đó thì sẽ gọi api verify với token đó, nếu token đúng
+thì trả về 200, và set IsVerified = true, còn nếu token sai thì trả về 400

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using QRCodeAttendance.Application.Auth;
 using QRCodeAttendance.Application.Dashboard;
 using QRCodeAttendance.Application.Department;
 using QRCodeAttendance.Application.Position;
@@ -106,5 +107,6 @@ public static class Extension
         services.AddScoped<IDepartmentService, DepartmentService>();
         services.AddScoped<IPositionService, PositionService>();
         services.AddScoped<IDashboardService, DashboardService>();
+        services.AddScoped<IAuthService, AuthService>();
     }
 }
