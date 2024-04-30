@@ -16,3 +16,4 @@ vậy nên anh viết api đó cho tôi nhé
 
 Task 3. ở trên task 2 là mối quan hệ position và user, còn mối quan hệ department và position anh cũng viết tương tự 1 cái api như thế nhé
 
+Task 4. Dashboard controller. Tôi đã viết miêu tả trong dashboard rồi ấy, anh cứ từ từ làm

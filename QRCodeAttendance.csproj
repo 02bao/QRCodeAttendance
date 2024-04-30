@@ -8,6 +8,14 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="1 5 Phân công task.txt" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Include="1 5 Phân công task.txt" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="CloudinaryDotNet" Version="1.26.2" />
 		<PackageReference Include="MailKit" Version="4.5.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
