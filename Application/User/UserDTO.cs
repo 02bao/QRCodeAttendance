@@ -1,5 +1,5 @@
-﻿using QRCodeAttendance.Application.Token;
-using QRCodeAttendance.Domain.Entities;
+﻿using QRCodeAttendance.Application.Role;
+using QRCodeAttendance.Application.Token;
 
 namespace QRCodeAttendance.Application.User;
 
@@ -9,8 +9,8 @@ public class UserDTO
     public string Email { get; set; } = "";
     public string Password { get; set; } = "";
     public string FullName { get; set; } = "";
-    public long RoleId { get; set; }
     public bool IsWoman { get; set; } = false;
+    public RoleDTO Role { get; set; } = new RoleDTO();
 }
 public class UserAuthenticate
 {
