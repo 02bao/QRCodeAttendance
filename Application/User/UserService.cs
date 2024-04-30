@@ -62,6 +62,7 @@ public class UserService(DataContext _context,
     {
         List<SqlUser> user = await _context.Users
             .Where(s => s.IsDeleted == false)
+            .Include(s => s.Role)
             .ToListAsync();
         List<UserDTO> use = user.Select(s => s.ToDTO()).ToList();
         return use;
@@ -71,6 +72,7 @@ public class UserService(DataContext _context,
     {
         SqlUser? user = await _context.Users
             .Where(s => s.Id == Id && s.IsDeleted == false)
+            .Include(s => s.Role)
             .FirstOrDefaultAsync();
         if (user == null) { return null; }
         UserDTO use = user.ToDTO();
@@ -83,33 +85,52 @@ public class UserService(DataContext _context,
         SqlPosition? position = await _context.Positions
             .Where(s => s.Id == PositionId)
             .Include(s => s.Users)
+            .ThenInclude(s => s.Role)
             .FirstOrDefaultAsync();
         if (position == null) { return dtos; }
         dtos = position.Users.Select(s => s.ToDTO()).ToList();
         return dtos;
     }
 
-    public async Task<bool> Update(long UserId, string Email,string Phone, string FullName, bool IsWoman, long RoleId, List<IFormFile> Images)
+    public async Task<bool> UploadImages(long UserId , List<IFormFile> Images)
+    {
+        SqlUser? user = await _context.Users
+            .Where(s => s.Id == UserId && s.IsDeleted == false)
+            .FirstOrDefaultAsync();
+        if (user == null) { return false; }
+        if (Images != null && Images.Count > 0)
+        {
+            CloudinaryService _cloudinary = new CloudinaryService();
+            string Url = _cloudinary.uploadFile(Images[0]);
+            if (!string.IsNullOrEmpty(Url))
+            {
+                if (!string.IsNullOrEmpty(user.Images)) { _cloudinary.DeleteFile(user.Images); }
+                user.Images = Url;
+            }
+        }
+         _context.Users.Update(user);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+    public async Task<bool> Update(long UserId, string Email,string Phone, string FullName, bool IsWoman, long RoleId, string Images)
     {
         SqlUser? user = await _context.Users
             .Where(s => s.Id == UserId && s.IsDeleted == false)
             .FirstOrDefaultAsync();
         if (user == null) { return false;}
-        user.Email = Email;
-        user.Phone = Phone;
-        user.FullName = FullName;
+        if(!string.IsNullOrEmpty(Email))
+        {
+            bool ExistEmail = await _context.Users
+                .Where(s => s.Email == Email && s.Id != UserId && s.IsDeleted == false)
+                .AnyAsync();
+            if(ExistEmail) { return false;}
+            user.Email = Email;
+        }
+        if(!string.IsNullOrEmpty(Phone)) { user.Phone = Phone; }
+        if(!string.IsNullOrEmpty(FullName)) { user.FullName = FullName; }
+        if(!string.IsNullOrEmpty(Images)) { user.Images = Images; }
         user.IsWoman = IsWoman;
         user.RoleId = RoleId;
-        if(Images != null && Images.Count > 0)
-        {
-            CloudinaryService _cloudinary = new CloudinaryService();
-            string Url = _cloudinary.uploadFile(Images[0]);
-            if(!string.IsNullOrEmpty(Url)) 
-            {
-                if(!string.IsNullOrEmpty(user.Images)) { _cloudinary.DeleteFile(user.Images); }
-                user.Images = Url;
-            }
-        }
          _context.Users.Update(user);
         await _context.SaveChangesAsync();
         return true;

@@ -49,10 +49,16 @@ public class UsersController(
         return Ok(dto);
     }
 
-    [HttpPut("{Id}")]
-    public async Task<IActionResult> Update(long Id, UserUpdateModel Model, [FromForm] List<IFormFile> Images)
+    [HttpPut("Images/{Id}")]
+    public async Task<IActionResult> UploadImages([FromRoute] long Id, [FromForm] List<IFormFile> Images)
     {
-        bool IsSuccess = await _userService.Update(Id, Model.Email, Model.Phone, Model.FullName, Model.IsWoman, Model.RoleId, Images);
+        bool IsSuccess = await _userService.UploadImages(Id, Images);
+        return IsSuccess ? Ok() : BadRequest();
+    }
+    [HttpPut("{Id}")]
+    public async Task<IActionResult> Update( long Id, UserUpdateModel Model)
+    {
+        bool IsSuccess = await _userService.Update(Id, Model.Email, Model.Phone, Model.FullName, Model.IsWoman, Model.RoleId, Model.Images);
         return IsSuccess? Ok(Model): BadRequest();
     }
     [HttpDelete("{id}")]

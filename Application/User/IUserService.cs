@@ -8,5 +8,6 @@ public interface IUserService
     Task<List<UserDTO>> GetAll();
     Task<UserDTO?> GetById(long Id);
     Task<List<UserDTO>> GetUsersByPositionId(long PositionId);
-    Task<bool> Update(long UserId, string Email, string FullName,string Phone, bool IsWoman, long RoleId, List<IFormFile> Images);
+    Task<bool> UploadImages(long UserId,List<IFormFile> Images);
+    Task<bool> Update(long UserId, string Email, string FullName,string Phone, bool IsWoman, long RoleId, string Images);
 }

@@ -2,3 +2,29 @@
 2024-04-30 22:27:08.977 +07:00 [ERR] The host was aborted.
 2024-04-30 22:27:27.879 +07:00 [ERR] The host was aborted.
 2024-04-30 22:27:41.336 +07:00 [ERR] The host was aborted.
+2024-04-30 23:26:48.652 +07:00 [ERR] The following errors occurred with attribute routing information:
+
+Error 1:
+For action: 'QRCodeAttendance.Presentation.Controllers.UsersController.UploadImages (QRCodeAttendance)'
+Error: The route template 'api/[controller]/Images/{Id]' has invalid syntax. Token delimiters ('[', ']') are imbalanced.
+2024-04-30 23:27:05.224 +07:00 [ERR] The following errors occurred with attribute routing information:
+
+Error 1:
+For action: 'QRCodeAttendance.Presentation.Controllers.UsersController.UploadImages (QRCodeAttendance)'
+Error: The route template 'api/[controller]/Images/{Id]' has invalid syntax. Token delimiters ('[', ']') are imbalanced.
+2024-04-30 23:27:11.252 +07:00 [ERR] The following errors occurred with attribute routing information:
+
+Error 1:
+For action: 'QRCodeAttendance.Presentation.Controllers.UsersController.UploadImages (QRCodeAttendance)'
+Error: The route template 'api/[controller]/Images/{Id]' has invalid syntax. Token delimiters ('[', ']') are imbalanced.
+2024-04-30 23:27:23.598 +07:00 [ERR] There is an incomplete parameter in the route template. Check that each '{' character has a matching '}' character. (Parameter 'routeTemplate')
+2024-04-30 23:28:20.859 +07:00 [ERR] The following errors occurred with attribute routing information:
+
+Error 1:
+For action: 'QRCodeAttendance.Presentation.Controllers.UsersController.UploadImages (QRCodeAttendance)'
+Error: The route template 'api/[controller]/Images/{Id]' has invalid syntax. Token delimiters ('[', ']') are imbalanced.
+2024-04-30 23:29:05.216 +07:00 [ERR] The following errors occurred with attribute routing information:
+
+Error 1:
+For action: 'QRCodeAttendance.Presentation.Controllers.UsersController.UploadImages (QRCodeAttendance)'
+Error: The route template 'api/[controller]/Images/{Id]' has invalid syntax. Token delimiters ('[', ']') are imbalanced.
