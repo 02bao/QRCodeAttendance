@@ -11,7 +11,8 @@ public class UsersController(
     IPositionService _positionService) : BaseController
 {
     [HttpPost("")]
-    public async Task<IActionResult> Register(UserCreateModel Model)
+    [Role("Admin")]
+    public async Task<IActionResult> CreateUser(UserCreateModel Model)
     {
         bool IsSuccess = await _userService.Create(Model.Email, Model.FullName, Model.Password, Model.IsWoman, Model.RoleId);
         return IsSuccess ? Ok(Model) : BadRequest();
@@ -50,7 +51,7 @@ public class UsersController(
     [HttpPut("{Id}/Positions/{PositionId}/assign")]
     public async Task<IActionResult> AssignUserToPosition(long Id, long PositionId)
     {
-        bool IsSuccess = await _positionService.AssignUserToPosition(Id,PositionId);
+        bool IsSuccess = await _positionService.AssignUserToPosition(Id, PositionId);
         return IsSuccess ? Ok(Id) : BadRequest();
     }
 

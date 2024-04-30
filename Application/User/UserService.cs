@@ -97,7 +97,7 @@ public class UserService(DataContext _context,
     public async Task<List<UserDTO>> GetAll()
     {
         List<SqlUser> user = await _context.Users
-            .Where(s => s.IsDeleted ==  false)
+            .Where(s => s.IsDeleted == false)
             .ToListAsync();
         List<UserDTO> use = user.Select(s => s.ToDTO()).ToList();
         return use;
@@ -108,20 +108,28 @@ public class UserService(DataContext _context,
         SqlUser? user = await _context.Users
             .Where(s => s.Id == Id && s.IsDeleted == false)
             .FirstOrDefaultAsync();
-        if(user == null) { return null; }
+        if (user == null) { return null; }
         UserDTO use = user.ToDTO();
         return use;
     }
 
-    public async Task<List<UserDTO>> GetUserIdByPositionId(long PositionId)
+    public async Task<List<UserDTO>> GetUsersByPositionId(long PositionId)
     {
+        //List<UserDTO> dtos = [];
+        //List<SqlUser> users = await _context.Users
+        //    .Where(s => s.Position.Id == PositionId && s.IsDeleted == false)
+        //    .Include(s => s.Position)
+        //    .ToListAsync();
+        //if (users == null || users.Count == 0) { return dtos; }
+        //dtos = users.Select(s => s.ToDTO()).ToList();
+        //return dtos;
         List<UserDTO> dtos = [];
-        List<SqlUser> users = await _context.Users
-            .Where(s => s.Position.Id == PositionId && s.IsDeleted == false)
-            .Include(s => s.Position)
-            .ToListAsync();
-        if(users == null || users.Count == 0) { return dtos; }
-        dtos = users.Select(s => s.ToDTO()).ToList();
+        SqlPosition? position = await _context.Positions
+            .Where(s => s.Id == PositionId)
+            .Include(s => s.Users)
+            .FirstOrDefaultAsync();
+        if (position == null) { return dtos; }
+        dtos = position.Users.Select(s => s.ToDTO()).ToList();
         return dtos;
     }
 }

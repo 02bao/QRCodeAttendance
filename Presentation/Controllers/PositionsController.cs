@@ -27,8 +27,8 @@ public class PositionsController(
         return Ok(dto);
     }
 
-    [HttpGet("{Id}/user")]
-    public async Task<IActionResult> GetUserIdByPositionId(long Id)
+    [HttpGet("{Id}/users")]
+    public async Task<IActionResult> GetUsersByPositionId(long Id)
     {
         List<UserDTO> dtos = await _userService.GetUserIdByPositionId(Id);
         return Ok(dtos);
