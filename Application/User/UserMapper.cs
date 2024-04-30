@@ -13,7 +13,9 @@ public static class UserMapper
             Email = entity.Email,
             Password = entity.Password,
             FullName = entity.FullName,
+            Phone = entity.Phone,
             IsWoman = entity.IsWoman,
+            Images = entity.Images,
             Role = entity.Role.ToDto()
         };
     }

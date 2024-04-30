@@ -12,8 +12,8 @@ using QRCodeAttendance.Infrastructure.Data;
 namespace QRCodeAttendance.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240429085356_2")]
-    partial class _2
+    [Migration("20240430152729_1")]
+    partial class _1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -163,7 +163,13 @@ namespace QRCodeAttendance.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Images")
+                        .HasColumnType("text");
+
                     b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsVerified")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("IsWoman")
@@ -173,17 +179,30 @@ namespace QRCodeAttendance.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<long?>("PositionId")
                         .HasColumnType("bigint");
 
                     b.Property<long>("RoleId")
                         .HasColumnType("bigint");
 
+                    b.Property<long?>("SqlDepartmentId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("VerifyToken")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
                     b.HasIndex("PositionId");
 
                     b.HasIndex("RoleId");
+
+                    b.HasIndex("SqlDepartmentId");
 
                     b.ToTable("Users");
 
@@ -194,9 +213,12 @@ namespace QRCodeAttendance.Migrations
                             Email = "admin@gmail.com",
                             FullName = "Admin",
                             IsDeleted = false,
+                            IsVerified = false,
                             IsWoman = false,
                             Password = "admin",
-                            RoleId = 1L
+                            Phone = "",
+                            RoleId = 1L,
+                            VerifyToken = ""
                         });
                 });
 
@@ -225,7 +247,7 @@ namespace QRCodeAttendance.Migrations
             modelBuilder.Entity("QRCodeAttendance.Domain.Entities.SqlUser", b =>
                 {
                     b.HasOne("QRCodeAttendance.Domain.Entities.SqlPosition", "Position")
-                        .WithMany("User")
+                        .WithMany("Users")
                         .HasForeignKey("PositionId");
 
                     b.HasOne("QRCodeAttendance.Domain.Entities.SqlRole", "Role")
@@ -233,6 +255,10 @@ namespace QRCodeAttendance.Migrations
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("QRCodeAttendance.Domain.Entities.SqlDepartment", null)
+                        .WithMany("User")
+                        .HasForeignKey("SqlDepartmentId");
 
                     b.Navigation("Position");
 
@@ -242,11 +268,13 @@ namespace QRCodeAttendance.Migrations
             modelBuilder.Entity("QRCodeAttendance.Domain.Entities.SqlDepartment", b =>
                 {
                     b.Navigation("Position");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("QRCodeAttendance.Domain.Entities.SqlPosition", b =>
                 {
-                    b.Navigation("User");
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("QRCodeAttendance.Domain.Entities.SqlRole", b =>

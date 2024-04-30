@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace QRCodeAttendance.Migrations
 {
     /// <inheritdoc />
-    public partial class _10 : Migration
+    public partial class _1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -74,13 +74,24 @@ namespace QRCodeAttendance.Migrations
                     Email = table.Column<string>(type: "text", nullable: false),
                     Password = table.Column<string>(type: "text", nullable: false),
                     FullName = table.Column<string>(type: "text", nullable: false),
+                    Phone = table.Column<string>(type: "text", nullable: false),
+                    IsWoman = table.Column<bool>(type: "boolean", nullable: false),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    Images = table.Column<string>(type: "text", nullable: true),
+                    IsVerified = table.Column<bool>(type: "boolean", nullable: false),
+                    VerifyToken = table.Column<string>(type: "text", nullable: false),
                     RoleId = table.Column<long>(type: "bigint", nullable: false),
-                    PositionId = table.Column<long>(type: "bigint", nullable: true)
+                    PositionId = table.Column<long>(type: "bigint", nullable: true),
+                    SqlDepartmentId = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Users_Departments_SqlDepartmentId",
+                        column: x => x.SqlDepartmentId,
+                        principalTable: "Departments",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Users_Positions_PositionId",
                         column: x => x.PositionId,
@@ -129,8 +140,8 @@ namespace QRCodeAttendance.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "Email", "FullName", "IsDeleted", "Password", "PositionId", "RoleId" },
-                values: new object[] { 1L, "admin@gmail.com", "Admin", false, "admin", null, 1L });
+                columns: new[] { "Id", "Email", "FullName", "Images", "IsDeleted", "IsVerified", "IsWoman", "Password", "Phone", "PositionId", "RoleId", "SqlDepartmentId", "VerifyToken" },
+                values: new object[] { 1L, "admin@gmail.com", "Admin", null, false, false, false, "admin", "", null, 1L, null, "" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Positions_DepartmentId",
@@ -151,6 +162,11 @@ namespace QRCodeAttendance.Migrations
                 name: "IX_Users_RoleId",
                 table: "Users",
                 column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_SqlDepartmentId",
+                table: "Users",
+                column: "SqlDepartmentId");
         }
 
         /// <inheritdoc />

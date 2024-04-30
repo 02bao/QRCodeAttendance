@@ -16,6 +16,12 @@ public class DataContext : DbContext
     public DbSet<SqlDepartment> Departments { get; set; }
     public DbSet<SqlPosition> Positions { get; set; }
 
+    public Random random = new Random();
+    public string RandomString(int length)
+    {
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
+    }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // setup 1 user có nhiều role và 1 role có nhiều user

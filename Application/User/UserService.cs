@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using QRCodeAttendance.Application.Cloud;
 using QRCodeAttendance.Application.Token;
 using QRCodeAttendance.Domain.Entities;
 using QRCodeAttendance.Infrastructure.Data;
@@ -25,28 +26,34 @@ public class UserService(DataContext _context,
         return true;
     }
 
-    public async Task<bool> Create(string Email, string FullName, string Password, bool IsWoman, long RoleId)
+    public async Task<string> Create(string Email, string FullName,string Phone, string Password, bool IsWoman, long RoleId)
     {
         SqlUser? user = await _context.Users.Where(s => s.Email.CompareTo(Email) == 0).FirstOrDefaultAsync();
-        if (user != null)
-        {
-            return false;
-        }
-
+        if (user != null) { return ""; }
         SqlRole? role = await _context.Roles.Where(s => s.Id == RoleId).FirstOrDefaultAsync();
-        if (role == null)
-        {
-            return false;
-        }
-
-        user = new SqlUser
+        if (role == null) { return ""; }
+        SqlUser NewUser = new SqlUser
         {
             Email = Email,
             FullName = FullName,
+            Phone = Phone,
             Password = Password,
+            VerifyToken = _context.RandomString(20),
             IsWoman = IsWoman,
             Role = role
         };
+        await _context.Users.AddAsync(NewUser);
+        await _context.SaveChangesAsync();
+        return NewUser.VerifyToken;
+    }
+    public async Task<bool> VerifyUser(string Token)
+    {
+        SqlUser? user = await _context.Users
+            .Where(s => s.VerifyToken == Token)
+            .FirstOrDefaultAsync();
+        if(user == null) { return false; }
+        user.IsVerified = true;
+        user.VerifyToken = string.Empty;
         await _context.SaveChangesAsync();
         return true;
     }
@@ -72,14 +79,6 @@ public class UserService(DataContext _context,
 
     public async Task<List<UserDTO>> GetUsersByPositionId(long PositionId)
     {
-        //List<UserDTO> dtos = [];
-        //List<SqlUser> users = await _context.Users
-        //    .Where(s => s.Position.Id == PositionId && s.IsDeleted == false)
-        //    .Include(s => s.Position)
-        //    .ToListAsync();
-        //if (users == null || users.Count == 0) { return dtos; }
-        //dtos = users.Select(s => s.ToDTO()).ToList();
-        //return dtos;
         List<UserDTO> dtos = [];
         SqlPosition? position = await _context.Positions
             .Where(s => s.Id == PositionId)
@@ -89,4 +88,31 @@ public class UserService(DataContext _context,
         dtos = position.Users.Select(s => s.ToDTO()).ToList();
         return dtos;
     }
+
+    public async Task<bool> Update(long UserId, string Email,string Phone, string FullName, bool IsWoman, long RoleId, List<IFormFile> Images)
+    {
+        SqlUser? user = await _context.Users
+            .Where(s => s.Id == UserId && s.IsDeleted == false)
+            .FirstOrDefaultAsync();
+        if (user == null) { return false;}
+        user.Email = Email;
+        user.Phone = Phone;
+        user.FullName = FullName;
+        user.IsWoman = IsWoman;
+        user.RoleId = RoleId;
+        if(Images != null && Images.Count > 0)
+        {
+            CloudinaryService _cloudinary = new CloudinaryService();
+            string Url = _cloudinary.uploadFile(Images[0]);
+            if(!string.IsNullOrEmpty(Url)) 
+            {
+                if(!string.IsNullOrEmpty(user.Images)) { _cloudinary.DeleteFile(user.Images); }
+                user.Images = Url;
+            }
+        }
+         _context.Users.Update(user);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
 }

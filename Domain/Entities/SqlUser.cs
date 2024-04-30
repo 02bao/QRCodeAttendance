@@ -9,8 +9,12 @@ public class SqlUser
     public string Email { get; set; } = "";
     public string Password { get; set; } = "";
     public string FullName { get; set; } = "";
+    public string Phone { get; set; } = "";
     public bool IsWoman { get; set; } = false;
     public bool IsDeleted { get; set; } = false;
+    public string? Images { get; set; }
+    public bool IsVerified { get; set; } = false;
+    public string VerifyToken { get; set; } = string.Empty;
     public long RoleId { get; set; }
     public SqlRole Role { get; set; } = null!;
     public SqlPosition? Position { get; set; }

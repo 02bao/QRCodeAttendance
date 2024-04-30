@@ -132,7 +132,14 @@ public class PositionService(
 
         if (position == null) { return false; }
 
-        if (!string.IsNullOrEmpty(Name)) { position.Name = Name; }
+        if (!string.IsNullOrEmpty(Name)) 
+        {
+            bool ExistName = await _context.Positions
+                .Where(s => s.Name == Name && s.Id != PositionId && s.IsDeleted == false)
+                .AnyAsync();
+            if(!ExistName) { return false; }
+            position.Name = Name; 
+        }
 
         if (!string.IsNullOrEmpty(Description)) { position.Description = Description; }
 

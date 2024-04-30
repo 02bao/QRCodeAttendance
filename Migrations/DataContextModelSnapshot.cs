@@ -160,13 +160,23 @@ namespace QRCodeAttendance.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Images")
+                        .HasColumnType("text");
+
                     b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsVerified")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("IsWoman")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Phone")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -178,6 +188,10 @@ namespace QRCodeAttendance.Migrations
 
                     b.Property<long?>("SqlDepartmentId")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("VerifyToken")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -196,9 +210,12 @@ namespace QRCodeAttendance.Migrations
                             Email = "admin@gmail.com",
                             FullName = "Admin",
                             IsDeleted = false,
+                            IsVerified = false,
                             IsWoman = false,
                             Password = "admin",
-                            RoleId = 1L
+                            Phone = "",
+                            RoleId = 1L,
+                            VerifyToken = ""
                         });
                 });
 

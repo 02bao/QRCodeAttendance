@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Asn1;
+using QRCodeAttendance.Application.Email;
 using QRCodeAttendance.Application.Position;
 using QRCodeAttendance.Application.User;
 using QRCodeAttendance.Presentation.Filters;
@@ -8,14 +11,24 @@ namespace QRCodeAttendance.Presentation.Controllers;
 
 public class UsersController(
     IUserService _userService,
-    IPositionService _positionService) : BaseController
+    IPositionService _positionService,
+    IEmailService _emailService) : BaseController
 {
     [HttpPost("")]
     [Role("Admin")]
     public async Task<IActionResult> CreateUser(UserCreateModel Model)
     {
-        bool IsSuccess = await _userService.Create(Model.Email, Model.FullName, Model.Password, Model.IsWoman, Model.RoleId);
-        return IsSuccess ? Ok(Model) : BadRequest();
+        string Token = await _userService.Create(Model.Email, Model.FullName,Model.Phone, Model.Password, Model.IsWoman, Model.RoleId);
+        if(Token == "") { return BadRequest(); }
+        bool EmailSend = _emailService.SendRegisterEmail(Model.Email, Model.FullName, Token);
+        if(!EmailSend) { Console.WriteLine("Failed to send registration email to: " + Model.Email); }
+        return EmailSend ? Ok() : BadRequest();
+    }
+    [HttpGet("Verify/{Token}")]
+    public async Task<IActionResult> Verify(string Token)
+    {
+        bool IsSuccess = await _userService.VerifyUser(Token);
+        return IsSuccess ? Ok("Verify Successfully") : BadRequest();
     }
 
     [HttpGet("")]
@@ -36,6 +49,12 @@ public class UsersController(
         return Ok(dto);
     }
 
+    [HttpPut("{Id}")]
+    public async Task<IActionResult> Update(long Id, UserUpdateModel Model, [FromForm] List<IFormFile> Images)
+    {
+        bool IsSuccess = await _userService.Update(Id, Model.Email, Model.Phone, Model.FullName, Model.IsWoman, Model.RoleId, Images);
+        return IsSuccess? Ok(Model): BadRequest();
+    }
     [HttpDelete("{id}")]
     [Role("Admin")]
     public async Task<IActionResult> Delete(long id)

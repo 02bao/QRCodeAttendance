@@ -6,12 +6,12 @@ namespace QRCodeAttendance.Application.Email
 {
     public class EmailService : IEmailService
     {
-        public string Email { get; set; } = "";
-        public string Name { get; set; } = "";
+        public string Email { get; set; } = "thaibaoluong02@gmail.com";
+        public string Name { get; set; } = "Thai Bao";
         public string SmtpService { get; set; } = "smtp.gmail.com";
         public int Port { get; set; } = 587;
-        public string SmtpName { get; set; } = "";
-        public string SmtpPassword { get; set; } = "";
+        public string SmtpName { get; set; } = "thaibaoluong02@gmail.com";
+        public string SmtpPassword { get; set; } = "uypq kjwj nqxi dpzq";
 
         public bool SendEmail(string ReceiveEmail, string ReceiveName, string Subjects, string Body)
         {
@@ -38,13 +38,13 @@ namespace QRCodeAttendance.Application.Email
                 return false;
             }
         }
-        public bool SendRegisterEmail(string ReceiveEmails, string ReceiveName, string Tokens)
+        public bool SendRegisterEmail(string ReceiveEmails, string ReceiveName, string Token)
         {
             try
             {
                 var Emails = new EmailService();
-                string Url = "http://localhost:3000/api/Account/Verify/" + Tokens;
-                string Subject = "Activate Your ITStudy Account";
+                string Url = "http://localhost:3000/api/Users/Verify/" + Token;
+                string Subject = "Activate Your Account";
                 string Body = "Chào mừng bạn đã đăng kí tài khoản ITStudy.Vui lòng xác nhận tài khoản bằng cách " +
                     "click vào đường dẫn sau : " + Url;
 

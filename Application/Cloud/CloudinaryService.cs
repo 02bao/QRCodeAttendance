@@ -53,4 +53,27 @@ public class CloudinaryService
             return "";
         }
     }
+
+    public bool DeleteFile(string ImageId)
+    {
+        try
+        {
+            var deleteParams = new DeletionParams(ImageId);
+
+            var result = _cloudinary.Destroy(deleteParams);
+
+            if (result.Error != null)
+            {
+                Log.Error(result.Error.Message ?? "Delete File from Cloudinary failed!");
+                return false;
+            }
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex.Message);
+            return false;
+        }
+    }
 }
