@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
+using QRCodeAttendance.Application.User;
 using QRCodeAttendance.Domain.Entities;
 using QRCodeAttendance.Infrastructure.Data;
 
@@ -52,10 +54,13 @@ public class PositionService(
     {
         SqlPosition? position = await _context.Positions
             .Where(s => s.Id == Id && s.IsDeleted == false)
+            .Include(s => s.Users)
             .FirstOrDefaultAsync();
-
         if (position == null) { return false; }
-
+        foreach (var user in position.Users)
+        {
+            user.Position = null!;
+        }
         position.IsDeleted = true;
         await _context.SaveChangesAsync();
         return true;
@@ -145,5 +150,17 @@ public class PositionService(
 
         await _context.SaveChangesAsync();
         return true;
+    }
+
+    public async Task<List<UserDTO>> GetUserWithoutPosition()
+    {
+        List<SqlUser> user = await _context.Users
+            .Where(s => s.Position == null &&
+                        s.IsDeleted == false &&
+                        s.IsVerified == true)
+            .Include(s => s.Role)
+            .ToListAsync();
+        List<UserDTO> dtos = user.Select(s => s.ToDTO()).ToList();
+        return dtos;
     }
 }

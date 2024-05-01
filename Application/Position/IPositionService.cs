@@ -1,4 +1,7 @@
-﻿namespace QRCodeAttendance.Application.Position;
+﻿using QRCodeAttendance.Application.User;
+using QRCodeAttendance.Domain.Entities;
+
+namespace QRCodeAttendance.Application.Position;
 
 public interface IPositionService
 {
@@ -8,7 +11,7 @@ public interface IPositionService
     Task<List<PositionDTO>> GetPositionsByDepartmentId(long DepartmentId);
     Task<bool> Update(long PositionId, string? Name, string? Description);
     Task<bool> Delete(long Id);
-
+    Task<List<UserDTO>> GetUserWithoutPosition();
     Task<bool> AssignUserToPosition(long UserId, long PositionId);
     Task<bool> RemoveUserFromPosition(long UserId, long PositionId);
 }

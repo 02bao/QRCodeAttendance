@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using QRCodeAttendance.Application.Position;
 using QRCodeAttendance.Application.User;
+using QRCodeAttendance.Presentation.Filters;
 using QRCodeAttendance.Presentation.Models;
 
 namespace QRCodeAttendance.Presentation.Controllers;
@@ -13,6 +14,14 @@ public class PositionsController(
     public async Task<IActionResult> GetAll()
     {
         List<PositionDTO> dtos = await _positionService.GetAll();
+        return Ok(dtos);
+    }
+
+    [HttpGet("UserwithoutPosition")]
+    [Role("Admin")]
+    public async Task<IActionResult> GetUserWithoutPosition()
+    {
+        List<UserDTO> dtos = await _positionService.GetUserWithoutPosition();
         return Ok(dtos);
     }
 

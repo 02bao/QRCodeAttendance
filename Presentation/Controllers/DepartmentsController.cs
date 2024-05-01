@@ -16,6 +16,13 @@ public class DepartmentsController(
         return Ok(dtos);
     }
 
+    [HttpGet("PositionWithoutDepartment")]
+    public async Task<IActionResult> GetPositionWithoutDepartment()
+    {
+        List<PositionDTO> dtos = await _departmentService.GetPositionWithoutDeparment();
+        return Ok(dtos);
+    }
+
     [HttpPost("")]
     public async Task<IActionResult> CreateDepartment(DepartmentCreateModel model)
     {

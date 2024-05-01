@@ -17,6 +17,6 @@ public class SqlUser
     public string VerifyToken { get; set; } = string.Empty;
     public long RoleId { get; set; }
     public SqlRole Role { get; set; } = null!;
-    public SqlPosition? Position { get; set; }
+    public SqlPosition? Position { get; set; } = null;
     public List<SqlToken> Tokens { get; set; } = [];
 }

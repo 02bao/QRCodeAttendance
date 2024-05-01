@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using QRCodeAttendance.Application.Position;
 using QRCodeAttendance.Domain.Entities;
 using QRCodeAttendance.Infrastructure.Data;
 
@@ -26,8 +27,19 @@ public class DepartmentService(
     public async Task<bool> DeleteById(long Id)
     {
         SqlDepartment? department = await _context.Departments
-            .Where(s => s.Id == Id && s.IsDeleted == false).FirstOrDefaultAsync();
+            .Where(s => s.Id == Id && s.IsDeleted == false)
+            .Include(s => s.Position)
+            .ThenInclude(s => s.Users)
+            .FirstOrDefaultAsync();
         if (department == null) { return false; }
+        foreach(var position in department.Position)
+        {
+            position.Department = null!;
+            foreach(var user in position.Users)
+            {
+                user.Position = null!;
+            }
+        }
         department.IsDeleted = true;
         await _context.SaveChangesAsync();
         return true;
@@ -55,6 +67,17 @@ public class DepartmentService(
         if (department == null) { return null; }
         DepartmentItemDTO dto = department.ToDTO();
         return dto;
+    }
+
+    public async Task<List<PositionDTO>> GetPositionWithoutDeparment()
+    {
+        List<SqlPosition> position = await _context.Positions
+            .Where(s => s.Department == null &&
+                        s.IsDeleted == false  )
+            .Include(s => s.Users)
+            .ToListAsync();
+        List<PositionDTO> dtos = position.Select(s => s.ToDTO()).ToList();
+        return dtos;
     }
 
     public async Task<bool> Update(long DepartmentId, string? Name, string? Description)

@@ -4,7 +4,7 @@ Ví dụ tôi có 1 department có 3 position, mỗi position lại có 3 employ
 Trường hợp thứ nhất: Nếu tôi xóa department(set isdelete = true ấy) 
 thì tất cả các position và các employees bên trong nó có nên bị xóa theo không? Nghĩa là set isdelete = true cho nó luôn.
 Hay là mình nên gỡ mối quan hệ giữa 3 position và 9 emp ra khỏi department rồi mới xóa department.
-
+( đã xong )
 
 Rồi suy nghĩ xong thì làm task tiếp theo
 
