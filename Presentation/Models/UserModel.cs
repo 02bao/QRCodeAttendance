@@ -23,5 +23,5 @@ public class UserUpdateModel
     public string Phone { get; set; } = "";
     public bool IsWoman { get; set; } = false;
     public long RoleId { get; set; }
-    public string? Images { get; set; }
+    public string Images { get; set; } = "";
 }

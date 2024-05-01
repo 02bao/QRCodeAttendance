@@ -10,6 +10,6 @@ public class UserDTO
     public string FullName { get; set; } = "";
     public string Phone { get; set; } = "";
     public bool IsWoman { get; set; } = false;
-    public string? Images { get; set; }
+    public string Images { get; set; } = "";
     public RoleDTO Role { get; set; } = new RoleDTO();
 }

@@ -10,4 +10,6 @@ public interface IUserService
     Task<List<UserDTO>> GetUsersByPositionId(long PositionId);
     Task<bool> UploadImages(long UserId,List<IFormFile> Images);
     Task<bool> Update(long UserId, string Email, string FullName,string Phone, bool IsWoman, long RoleId, string Images);
+    Task<bool> ChangeUSerPassword(long UserId, string OldPassword, string NewPassword);
+    Task<bool> ResertUserPassword(long UserId, string NewPassword);
 }

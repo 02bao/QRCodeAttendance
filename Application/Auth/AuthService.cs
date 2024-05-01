@@ -17,7 +17,8 @@ public class AuthService(DataContext _context,
             SqlUser? user = _context.Users
                 .Where(s => s.Email.CompareTo(Email) == 0 &&
                             s.Password.CompareTo(Password) == 0 &&
-                            s.IsDeleted == false)
+                            s.IsDeleted == false &&
+                            s.IsVerified == true)
                 .Include(s => s.Role)
                 .FirstOrDefault();
 
