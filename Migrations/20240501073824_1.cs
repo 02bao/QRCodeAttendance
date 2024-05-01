@@ -77,19 +77,19 @@ namespace QRCodeAttendance.Migrations
                     Phone = table.Column<string>(type: "text", nullable: false),
                     IsWoman = table.Column<bool>(type: "boolean", nullable: false),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
-                    Images = table.Column<string>(type: "text", nullable: true),
+                    Images = table.Column<string>(type: "text", nullable: false),
                     IsVerified = table.Column<bool>(type: "boolean", nullable: false),
                     VerifyToken = table.Column<string>(type: "text", nullable: false),
                     RoleId = table.Column<long>(type: "bigint", nullable: false),
                     PositionId = table.Column<long>(type: "bigint", nullable: true),
-                    SqlDepartmentId = table.Column<long>(type: "bigint", nullable: true)
+                    DepartmentId = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Users_Departments_SqlDepartmentId",
-                        column: x => x.SqlDepartmentId,
+                        name: "FK_Users_Departments_DepartmentId",
+                        column: x => x.DepartmentId,
                         principalTable: "Departments",
                         principalColumn: "Id");
                     table.ForeignKey(
@@ -140,8 +140,8 @@ namespace QRCodeAttendance.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "Email", "FullName", "Images", "IsDeleted", "IsVerified", "IsWoman", "Password", "Phone", "PositionId", "RoleId", "SqlDepartmentId", "VerifyToken" },
-                values: new object[] { 1L, "admin@gmail.com", "Admin", null, false, false, false, "admin", "", null, 1L, null, "" });
+                columns: new[] { "Id", "DepartmentId", "Email", "FullName", "Images", "IsDeleted", "IsVerified", "IsWoman", "Password", "Phone", "PositionId", "RoleId", "VerifyToken" },
+                values: new object[] { 1L, null, "admin@gmail.com", "Admin", "string", false, true, false, "admin", "", null, 1L, "" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Positions_DepartmentId",
@@ -154,6 +154,11 @@ namespace QRCodeAttendance.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Users_DepartmentId",
+                table: "Users",
+                column: "DepartmentId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Users_PositionId",
                 table: "Users",
                 column: "PositionId");
@@ -162,11 +167,6 @@ namespace QRCodeAttendance.Migrations
                 name: "IX_Users_RoleId",
                 table: "Users",
                 column: "RoleId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Users_SqlDepartmentId",
-                table: "Users",
-                column: "SqlDepartmentId");
         }
 
         /// <inheritdoc />

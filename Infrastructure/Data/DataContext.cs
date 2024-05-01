@@ -50,6 +50,8 @@ public class DataContext : DbContext
                     Email = "admin@gmail.com",
                     Password = "admin",
                     FullName = "Admin",
+                    Images = "string",
+                    IsVerified = true,
                     RoleId = 1
                 });
     }

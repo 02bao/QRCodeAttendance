@@ -12,8 +12,8 @@ Task 2. Rồi mình có 1 api là assign user vào 1 position, nếu user đã �
 thế thì anh suy nghĩ lúc mà bên frontend gọi api asign user vào position này á,
 bên fe phải gọi 1 api có ý nghĩa là: lấy tất cả user đang không có position nào, thì server trả về
 1 list các user đang không có position, thì lúc đó frontend mới chọn 1 user để assign vào position. phai không nào
-vậy nên anh viết api đó cho tôi nhé
+vậy nên anh viết api đó cho tôi nhé ( đã xong )
 
-Task 3. ở trên task 2 là mối quan hệ position và user, còn mối quan hệ department và position anh cũng viết tương tự 1 cái api như thế nhé
+Task 3. ở trên task 2 là mối quan hệ position và user, còn mối quan hệ department và position anh cũng viết tương tự 1 cái api như thế nhé ( đã xong )
 
 Task 4. Dashboard controller. Tôi đã viết miêu tả trong dashboard rồi ấy, anh cứ từ từ làm

@@ -152,6 +152,9 @@ namespace QRCodeAttendance.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
+                    b.Property<long?>("DepartmentId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("text");
@@ -161,6 +164,7 @@ namespace QRCodeAttendance.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Images")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool>("IsDeleted")
@@ -186,20 +190,17 @@ namespace QRCodeAttendance.Migrations
                     b.Property<long>("RoleId")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("SqlDepartmentId")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("VerifyToken")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DepartmentId");
+
                     b.HasIndex("PositionId");
 
                     b.HasIndex("RoleId");
-
-                    b.HasIndex("SqlDepartmentId");
 
                     b.ToTable("Users");
 
@@ -209,8 +210,9 @@ namespace QRCodeAttendance.Migrations
                             Id = 1L,
                             Email = "admin@gmail.com",
                             FullName = "Admin",
+                            Images = "string",
                             IsDeleted = false,
-                            IsVerified = false,
+                            IsVerified = true,
                             IsWoman = false,
                             Password = "admin",
                             Phone = "",
@@ -243,6 +245,10 @@ namespace QRCodeAttendance.Migrations
 
             modelBuilder.Entity("QRCodeAttendance.Domain.Entities.SqlUser", b =>
                 {
+                    b.HasOne("QRCodeAttendance.Domain.Entities.SqlDepartment", "Department")
+                        .WithMany("User")
+                        .HasForeignKey("DepartmentId");
+
                     b.HasOne("QRCodeAttendance.Domain.Entities.SqlPosition", "Position")
                         .WithMany("Users")
                         .HasForeignKey("PositionId");
@@ -253,9 +259,7 @@ namespace QRCodeAttendance.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("QRCodeAttendance.Domain.Entities.SqlDepartment", null)
-                        .WithMany("User")
-                        .HasForeignKey("SqlDepartmentId");
+                    b.Navigation("Department");
 
                     b.Navigation("Position");
 
