@@ -17,29 +17,48 @@ public class PositionService(
         List<PositionItemDTO> dtos = position.Select(s => s.ToDTO()).ToList();
         return dtos;
     }
+    //public async Task<bool> AssignUserToPosition(long UserId, long PositionId)
+    //{
+    //    SqlPosition? position = await _context.Positions
+    //        .Where(s => s.Id == PositionId && s.IsDeleted == false)
+    //        .Include(s => s.Users)
+    //        .FirstOrDefaultAsync();
+
+    //    if (position == null) { return false; }
+
+    //    SqlUser? user = await _context.Users
+    //        .Where(s => s.Id == UserId && s.IsDeleted == false)
+    //        .FirstOrDefaultAsync();
+
+    //    if (user == null) { return false; }
+
+    //    if (position.Users.Contains(user)) { return false; }
+
+    //    position.Users.Add(user);
+    //    position.Department.User.Add(user);
+    //    await _context.SaveChangesAsync();
+    //    return true;
+    //}
+
     public async Task<bool> AssignUserToPosition(long UserId, long PositionId)
     {
-        SqlPosition? position = await _context.Positions
-            .Where(s => s.Id == PositionId && s.IsDeleted == false)
-            .Include(s => s.Users)
-            .FirstOrDefaultAsync();
-
-        if (position == null) { return false; }
-
         SqlUser? user = await _context.Users
-            .Where(s => s.Id == UserId && s.IsDeleted == false)
-            .FirstOrDefaultAsync();
-
+             .Where(s => s.Id == UserId && s.IsDeleted == false)
+             .FirstOrDefaultAsync();
         if (user == null) { return false; }
 
-        if (position.Users.Contains(user)) { return false; }
+        SqlPosition? position = await _context.Positions
+            .Where(s => s.Id == PositionId && s.IsDeleted == false)
+            .Include(s => s.Department)
+            .FirstOrDefaultAsync();
+        if (position == null) { return false; }
 
-        position.Users.Add(user);
-        position.Department.User.Add(user);
+        user.Position = position;
+        user.Department = position.Department;
         await _context.SaveChangesAsync();
+
         return true;
     }
-
     public async Task<bool> CreateNewPositions(long DepartmentId, string Name, string Description)
     {
         SqlDepartment? department = await _context.Departments

@@ -25,15 +25,15 @@ public class DataContext : DbContext
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<SqlUser>()
-            .HasOne(x => x.Role)
-            .WithMany(x => x.Users)
-            .HasForeignKey(x => x.RoleId);
+        //modelBuilder.Entity<SqlUser>()
+        //    .HasOne(x => x.Role)
+        //    .WithMany(x => x.Users)
+        //    .HasForeignKey(x => x.RoleId);
 
-        modelBuilder.Entity<SqlUser>()
-            .HasOne(x => x.Position)
-            .WithMany(x => x.Users)
-            .IsRequired(false);
+        //modelBuilder.Entity<SqlUser>()
+        //    .HasOne(x => x.Position)
+        //    .WithMany(x => x.Users)
+        //    .IsRequired(false);
 
         modelBuilder.Entity<SqlRole>()
             .HasData(
@@ -51,6 +51,8 @@ public class DataContext : DbContext
                     IsVerified = true,
                     RoleId = 1
                 });
+
+
     }
 
 }

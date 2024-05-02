@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
-namespace QRCodeAttendance.Migrations
+namespace QRCodeAttendance.Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class _1 : Migration
@@ -30,6 +30,20 @@ namespace QRCodeAttendance.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Files",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Path = table.Column<string>(type: "text", nullable: false),
+                    Type = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Files", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
                 {
@@ -49,10 +63,10 @@ namespace QRCodeAttendance.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    DepartmentId = table.Column<long>(type: "bigint", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DepartmentId = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -61,8 +75,7 @@ namespace QRCodeAttendance.Migrations
                         name: "FK_Positions_Departments_DepartmentId",
                         column: x => x.DepartmentId,
                         principalTable: "Departments",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -77,7 +90,7 @@ namespace QRCodeAttendance.Migrations
                     Phone = table.Column<string>(type: "text", nullable: false),
                     IsWoman = table.Column<bool>(type: "boolean", nullable: false),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
-                    Images = table.Column<string>(type: "text", nullable: false),
+                    ImagesId = table.Column<long>(type: "bigint", nullable: true),
                     IsVerified = table.Column<bool>(type: "boolean", nullable: false),
                     VerifyToken = table.Column<string>(type: "text", nullable: false),
                     RoleId = table.Column<long>(type: "bigint", nullable: false),
@@ -91,6 +104,11 @@ namespace QRCodeAttendance.Migrations
                         name: "FK_Users_Departments_DepartmentId",
                         column: x => x.DepartmentId,
                         principalTable: "Departments",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Users_Files_ImagesId",
+                        column: x => x.ImagesId,
+                        principalTable: "Files",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Users_Positions_PositionId",
@@ -140,8 +158,8 @@ namespace QRCodeAttendance.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "DepartmentId", "Email", "FullName", "Images", "IsDeleted", "IsVerified", "IsWoman", "Password", "Phone", "PositionId", "RoleId", "VerifyToken" },
-                values: new object[] { 1L, null, "admin@gmail.com", "Admin", "string", false, true, false, "admin", "", null, 1L, "" });
+                columns: new[] { "Id", "DepartmentId", "Email", "FullName", "ImagesId", "IsDeleted", "IsVerified", "IsWoman", "Password", "Phone", "PositionId", "RoleId", "VerifyToken" },
+                values: new object[] { 1L, null, "admin@gmail.com", "Admin", null, false, true, false, "admin", "", null, 1L, "" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Positions_DepartmentId",
@@ -157,6 +175,11 @@ namespace QRCodeAttendance.Migrations
                 name: "IX_Users_DepartmentId",
                 table: "Users",
                 column: "DepartmentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_ImagesId",
+                table: "Users",
+                column: "ImagesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_PositionId",
@@ -177,6 +200,9 @@ namespace QRCodeAttendance.Migrations
 
             migrationBuilder.DropTable(
                 name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "Files");
 
             migrationBuilder.DropTable(
                 name: "Positions");

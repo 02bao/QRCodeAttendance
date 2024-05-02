@@ -17,7 +17,6 @@ public class DepartmentsController(
     }
 
 
-
     [HttpPost("")]
     public async Task<IActionResult> CreateDepartment(DepartmentCreateModel model)
     {
@@ -58,6 +57,6 @@ public class DepartmentsController(
     public async Task<IActionResult> CreatePosition(long Id, PositionCreateModel model)
     {
         bool IsSuccess = await _positionService.CreateNewPositions(Id, model.Name, model.Description);
-        return IsSuccess ? Ok(model) : BadRequest();
+        return IsSuccess ? Ok() : BadRequest();
     }
 }

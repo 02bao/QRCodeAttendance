@@ -22,6 +22,7 @@ public class UsersController(
         if (!EmailSend) { Console.WriteLine("Failed to send registration email to: " + Model.Email); }
         return EmailSend ? Ok() : BadRequest();
     }
+
     [HttpGet("Verify/{Token}")]
     public async Task<IActionResult> Verify(string Token)
     {
@@ -80,7 +81,4 @@ public class UsersController(
         bool IsSuccess = await _positionService.RemoveUserFromPosition(Id, PositionId);
         return IsSuccess ? Ok(Id) : BadRequest();
     }
-
-
-
 }
