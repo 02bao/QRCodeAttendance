@@ -17,18 +17,18 @@ public class AuthController(IAuthService _authService) : BaseController
 
     [HttpPut("Admin/ResetPwd")]
     [Role("Admin")]
-    public async Task<IActionResult> ReserUserPassword(ResetPwdModel model)
+    public async Task<IActionResult> ResetUserPassword(ResetPwdModel model)
     {
         bool IsSuccess = await _authService.ResetPassword(model.UserId, model.NewPassword);
         return IsSuccess ? Ok() : BadRequest();
     }
 
-    [HttpPut("ChangePassword")]
-    public async Task<IActionResult> ChangePassword(string OldPassword, string NewPassword)
+    [HttpPut("ChangePwd")]
+    public async Task<IActionResult> ChangePassword(ChangePwdModel model)
     {
         long Id = long.Parse(HttpContext.Items["Id"] as string ?? "0");
 
-        bool IsSuccess = await _authService.ChangePassword(Id, OldPassword, NewPassword);
+        bool IsSuccess = await _authService.ChangePassword(Id, model.OldPassword, model.NewPassword);
         return IsSuccess ? Ok() : BadRequest();
     }
 
