@@ -106,8 +106,9 @@ public class PositionService(
         return pos;
     }
 
-    public async Task<List<PositionItemDTO>> GetPositionsByDepartmentId(long DepartmentId)
+    public async Task<GetPositionsByDepartmentIdDTO> GetPositionsByDepartmentId(long DepartmentId)
     {
+        GetPositionsByDepartmentIdDTO response = new();
         SqlDepartment? department = await _context.Departments
             .Where(s => s.Id == DepartmentId && s.IsDeleted == false)
             .Include(s => s.Positions)
@@ -115,11 +116,13 @@ public class PositionService(
 
         if (department == null)
         {
-            return [];
+            return response;
         }
 
         List<PositionItemDTO> dtos = department.Positions.Select(s => s.ToDTO()).ToList();
-        return dtos;
+        response.DepartmentName = department.Name;
+        response.Data = dtos;
+        return response;
     }
 
     public async Task<PositionItemDTO?> GetById(long Id)

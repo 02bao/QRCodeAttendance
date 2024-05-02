@@ -8,7 +8,7 @@ public interface IPositionService
     Task<List<PositionItemDTO>> GetAll();
     Task<List<PositionItemDTO>> GetPositionWithoutDeparment();
     Task<PositionItemDTO?> GetById(long Id);
-    Task<List<PositionItemDTO>> GetPositionsByDepartmentId(long DepartmentId);
+    Task<GetPositionsByDepartmentIdDTO> GetPositionsByDepartmentId(long DepartmentId);
     Task<bool> Update(long PositionId, string? Name, string? Description);
     Task<bool> Delete(long Id);
     Task<List<UserDTO>> GetUserWithoutPosition();

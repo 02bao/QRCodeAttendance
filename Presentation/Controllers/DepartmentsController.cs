@@ -49,7 +49,7 @@ public class DepartmentsController(
     [HttpGet("{Id}/positions")]
     public async Task<IActionResult> GetPositionsByDepartmentId(long Id)
     {
-        List<PositionItemDTO> dtos = await _positionService.GetPositionsByDepartmentId(Id);
+        GetPositionsByDepartmentIdDTO dtos = await _positionService.GetPositionsByDepartmentId(Id);
         return Ok(dtos);
     }
 

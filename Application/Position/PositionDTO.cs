@@ -13,3 +13,9 @@ public class PositionItemDTO
     public string Description { get; set; } = "";
     public int EmployeeCount { get; set; }
 }
+
+public class GetPositionsByDepartmentIdDTO
+{
+    public string DepartmentName { get; set; } = "";
+    public List<PositionItemDTO> Data { get; set; } = new List<PositionItemDTO>();
+}
