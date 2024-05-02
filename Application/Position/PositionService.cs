@@ -35,6 +35,7 @@ public class PositionService(
         if (position.Users.Contains(user)) { return false; }
 
         position.Users.Add(user);
+        position.Department.User.Add(user);
         await _context.SaveChangesAsync();
         return true;
     }
