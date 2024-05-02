@@ -3,7 +3,7 @@ using CloudinaryDotNet.Actions;
 using Serilog;
 namespace QRCodeAttendance.Application.Cloud;
 
-public class CloudinaryService
+public class CloudinaryService : ICloudinaryService
 {
     private readonly Cloudinary _cloudinary;
     public CloudinaryService()

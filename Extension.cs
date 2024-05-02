@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using QRCodeAttendance.Application.Auth;
+using QRCodeAttendance.Application.Cloud;
 using QRCodeAttendance.Application.Dashboard;
 using QRCodeAttendance.Application.Department;
 using QRCodeAttendance.Application.Email;
+using QRCodeAttendance.Application.File;
 using QRCodeAttendance.Application.Position;
 using QRCodeAttendance.Application.Token;
 using QRCodeAttendance.Application.User;
@@ -111,5 +112,8 @@ public static class Extension
         services.AddScoped<IDashboardService, DashboardService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IEmailService, EmailService>();
+        services.AddScoped<IFileService, FileService>();
+        services.AddScoped<ICloudinaryService, CloudinaryService>();
+
     }
 }

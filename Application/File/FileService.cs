@@ -5,7 +5,7 @@ using Serilog;
 
 namespace QRCodeAttendance.Application.File;
 
-public class FileService(CloudinaryService cloudinaryService, DataContext _context) : IFileService
+public class FileService(ICloudinaryService cloudinaryService, DataContext _context) : IFileService
 {
     public async Task<long> CreateFile(IFormFile file)
     {
