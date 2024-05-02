@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
 using QRCodeAttendance.Application.User;
 using QRCodeAttendance.Domain.Entities;
 using QRCodeAttendance.Infrastructure.Data;
@@ -9,6 +8,15 @@ namespace QRCodeAttendance.Application.Position;
 public class PositionService(
     DataContext _context) : IPositionService
 {
+    public async Task<List<PositionItemDTO>> GetPositionWithoutDeparment()
+    {
+        List<SqlPosition> position = await _context.Positions
+            .Where(s => s.Department == null && s.IsDeleted == false)
+            .Include(s => s.Users)
+            .ToListAsync();
+        List<PositionItemDTO> dtos = position.Select(s => s.ToDTO()).ToList();
+        return dtos;
+    }
     public async Task<bool> AssignUserToPosition(long UserId, long PositionId)
     {
         SqlPosition? position = await _context.Positions
@@ -56,45 +64,59 @@ public class PositionService(
             .Where(s => s.Id == Id && s.IsDeleted == false)
             .Include(s => s.Users)
             .FirstOrDefaultAsync();
+
         if (position == null) { return false; }
-        foreach (var user in position.Users)
+        foreach (SqlUser user in position.Users)
         {
-            user.Position = null!;
+            user.Position = null;
         }
         position.IsDeleted = true;
         await _context.SaveChangesAsync();
         return true;
     }
 
-    public async Task<List<PositionDTO>> GetAll()
+    public async Task<List<PositionItemDTO>> GetAll()
     {
         List<SqlPosition> position = await _context.Positions
             .Where(s => s.IsDeleted == false)
             .Include(s => s.Users)
             .ToListAsync();
 
-        List<PositionDTO> pos = position.Select(s => s.ToDTO()).ToList();
+        List<PositionItemDTO> pos = position.Select(s => s.ToDTO()).ToList();
         return pos;
     }
 
-    public async Task<List<PositionDTO>> GetPositionsByDepartmentId(long DepartmentId)
+    // xử lý list thì không nên cho phép null, nghĩa là không để dấu ? ở cuối. Chỉ trả về chuỗi rỗng thôi []
+
+    //public async Task<List<PositionItemDTO>> GetPositionsByDepartmentId(long DepartmentId)
+    //{
+    //    List<SqlPosition>? positions = await _context.Positions
+    //        .Where(s => s.Department.Id == DepartmentId && s.IsDeleted == false)
+    //        .Include(s => s.Users)
+    //        .Include(s => s.Department)
+    //        .ToListAsync();
+    //    List<PositionItemDTO> dtos = [];
+    //    if (positions == null || positions.Count == 0) { return dtos; }
+    //    dtos = positions.Select(s => s.ToDTO()).ToList();
+    //    return dtos;
+    //}
+    public async Task<List<PositionItemDTO>> GetPositionsByDepartmentId(long DepartmentId)
     {
-        List<SqlPosition>? positions = await _context.Positions
-            .Where(s => s.Department.Id == DepartmentId && s.IsDeleted == false)
-            .Include(s => s.Users)
-            .Include(s => s.Department)
-            .ToListAsync();
+        SqlDepartment? department = await _context.Departments
+            .Where(s => s.Id == DepartmentId && s.IsDeleted == false)
+            .Include(s => s.Positions)
+            .FirstOrDefaultAsync();
 
-        List<PositionDTO> dtos = [];
+        if (department == null)
+        {
+            return [];
+        }
 
-        if (positions == null || positions.Count == 0) { return dtos; }
-
-        dtos = positions.Select(s => s.ToDTO()).ToList();
-
+        List<PositionItemDTO> dtos = department.Positions.Select(s => s.ToDTO()).ToList();
         return dtos;
     }
 
-    public async Task<PositionDTO?> GetById(long Id)
+    public async Task<PositionItemDTO?> GetById(long Id)
     {
         SqlPosition? position = await _context.Positions
             .Where(s => s.Id == Id && s.IsDeleted == false)
@@ -103,7 +125,7 @@ public class PositionService(
 
         if (position == null) { return null; }
 
-        PositionDTO dto = position.ToDTO();
+        PositionItemDTO dto = position.ToDTO();
         return dto;
     }
 
@@ -137,13 +159,13 @@ public class PositionService(
 
         if (position == null) { return false; }
 
-        if (!string.IsNullOrEmpty(Name)) 
+        if (!string.IsNullOrEmpty(Name))
         {
             bool ExistName = await _context.Positions
                 .Where(s => s.Name == Name && s.Id != PositionId && s.IsDeleted == false)
                 .AnyAsync();
-            if(!ExistName) { return false; }
-            position.Name = Name; 
+            if (!ExistName) { return false; }
+            position.Name = Name;
         }
 
         if (!string.IsNullOrEmpty(Description)) { position.Description = Description; }

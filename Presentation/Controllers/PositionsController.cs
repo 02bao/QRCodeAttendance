@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using QRCodeAttendance.Application.Position;
 using QRCodeAttendance.Application.User;
-using QRCodeAttendance.Presentation.Filters;
 using QRCodeAttendance.Presentation.Models;
 
 namespace QRCodeAttendance.Presentation.Controllers;
@@ -13,27 +12,23 @@ public class PositionsController(
     [HttpGet("")]
     public async Task<IActionResult> GetAll()
     {
-        List<PositionDTO> dtos = await _positionService.GetAll();
+        List<PositionItemDTO> dtos = await _positionService.GetAll();
         return Ok(dtos);
     }
 
-    [HttpGet("UserwithoutPosition")]
-    [Role("Admin")]
-    public async Task<IActionResult> GetUserWithoutPosition()
+
+    [HttpGet("WithNoDepartment")]
+    public async Task<IActionResult> GetPositionWithoutDepartment()
     {
-        List<UserDTO> dtos = await _positionService.GetUserWithoutPosition();
+        List<PositionItemDTO> dtos = await _positionService.GetPositionWithoutDeparment();
         return Ok(dtos);
     }
 
     [HttpGet("{Id}")]
     public async Task<IActionResult> GetById(long Id)
     {
-        PositionDTO? dto = await _positionService.GetById(Id);
-        if (dto == null)
-        {
-            return NotFound();
-        }
-        return Ok(dto);
+        PositionItemDTO? dto = await _positionService.GetById(Id);
+        return dto == null ? NotFound() : Ok(dto);
     }
 
     [HttpGet("{Id}/users")]

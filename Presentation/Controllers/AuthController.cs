@@ -11,11 +11,6 @@ public class AuthController(IAuthService _authService) : BaseController
     {
         UserAuthenticate response = await _authService.Login(model.Email, model.Password);
 
-        if (string.IsNullOrEmpty(response.Email))
-        {
-            return BadRequest();
-        }
-
-        return Ok(response);
+        return string.IsNullOrEmpty(response.Email) ? BadRequest() : Ok(response);
     }
 }

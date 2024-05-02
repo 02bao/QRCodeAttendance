@@ -12,7 +12,7 @@ public class SqlUser
     public string Phone { get; set; } = "";
     public bool IsWoman { get; set; } = false;
     public bool IsDeleted { get; set; } = false;
-    public string Images { get; set; } = "";
+    public SqlFile? Images { get; set; } = null;
     public bool IsVerified { get; set; } = false;
     public string VerifyToken { get; set; } = string.Empty;
     public long RoleId { get; set; }

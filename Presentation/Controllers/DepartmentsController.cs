@@ -16,12 +16,7 @@ public class DepartmentsController(
         return Ok(dtos);
     }
 
-    [HttpGet("PositionWithoutDepartment")]
-    public async Task<IActionResult> GetPositionWithoutDepartment()
-    {
-        List<PositionDTO> dtos = await _departmentService.GetPositionWithoutDeparment();
-        return Ok(dtos);
-    }
+
 
     [HttpPost("")]
     public async Task<IActionResult> CreateDepartment(DepartmentCreateModel model)
@@ -34,11 +29,7 @@ public class DepartmentsController(
     public async Task<IActionResult> GetById(long Id)
     {
         DepartmentItemDTO? dto = await _departmentService.GetById(Id);
-        if (dto == null)
-        {
-            return NotFound();
-        }
-        return Ok(dto);
+        return dto == null ? NotFound() : Ok(dto);
     }
 
 
@@ -59,7 +50,7 @@ public class DepartmentsController(
     [HttpGet("{Id}/positions")]
     public async Task<IActionResult> GetPositionsByDepartmentId(long Id)
     {
-        List<PositionDTO> dtos = await _positionService.GetPositionsByDepartmentId(Id);
+        List<PositionItemDTO> dtos = await _positionService.GetPositionsByDepartmentId(Id);
         return Ok(dtos);
     }
 

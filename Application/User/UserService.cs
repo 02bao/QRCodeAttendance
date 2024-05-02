@@ -1,13 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using QRCodeAttendance.Application.Cloud;
-using QRCodeAttendance.Application.Token;
 using QRCodeAttendance.Domain.Entities;
 using QRCodeAttendance.Infrastructure.Data;
 
 namespace QRCodeAttendance.Application.User;
 
-public class UserService(DataContext _context,
-    ITokenService _tokenService) : IUserService
+public class UserService(DataContext _context) : IUserService
 {
     public async Task<bool> Delete(long id)
     {
@@ -26,13 +23,17 @@ public class UserService(DataContext _context,
         return true;
     }
 
-    public async Task<string> Create(string Email, string FullName,string Phone, string Password, bool IsWoman, long RoleId)
+    public async Task<string> Create(string Email, string FullName, string Phone, string Password, bool IsWoman, long RoleId)
     {
-        SqlUser? user = await _context.Users.Where(s => s.Email.CompareTo(Email) == 0).FirstOrDefaultAsync();
+        SqlUser? user = await _context.Users
+            .Where(s => s.Email.CompareTo(Email) == 0 && s.IsDeleted == false)
+            .FirstOrDefaultAsync();
         if (user != null) { return ""; }
-        SqlRole? role = await _context.Roles.Where(s => s.Id == RoleId).FirstOrDefaultAsync();
+        SqlRole? role = await _context.Roles
+            .Where(s => s.Id == RoleId && s.IsDeleted == false)
+            .FirstOrDefaultAsync();
         if (role == null) { return ""; }
-        SqlUser NewUser = new SqlUser
+        SqlUser NewUser = new()
         {
             Email = Email,
             FullName = FullName,
@@ -49,9 +50,9 @@ public class UserService(DataContext _context,
     public async Task<bool> VerifyUser(string Token)
     {
         SqlUser? user = await _context.Users
-            .Where(s => s.VerifyToken == Token)
+            .Where(s => s.VerifyToken == Token && s.IsDeleted == false)
             .FirstOrDefaultAsync();
-        if(user == null) { return false; }
+        if (user == null) { return false; }
         user.IsVerified = true;
         user.VerifyToken = string.Empty;
         await _context.SaveChangesAsync();
@@ -63,9 +64,10 @@ public class UserService(DataContext _context,
         List<SqlUser> user = await _context.Users
             .Where(s => s.IsDeleted == false)
             .Include(s => s.Role)
+            .Include(s => s.Position)
             .ToListAsync();
-        List<UserDTO> use = user.Select(s => s.ToDTO()).ToList();
-        return use;
+        List<UserDTO> dtos = user.Select(s => s.ToDTO()).ToList();
+        return dtos;
     }
 
     public async Task<UserDTO?> GetById(long Id)
@@ -73,6 +75,7 @@ public class UserService(DataContext _context,
         SqlUser? user = await _context.Users
             .Where(s => s.Id == Id && s.IsDeleted == false)
             .Include(s => s.Role)
+            .Include(s => s.Position)
             .FirstOrDefaultAsync();
         if (user == null) { return null; }
         UserDTO use = user.ToDTO();
@@ -86,64 +89,52 @@ public class UserService(DataContext _context,
             .Where(s => s.Id == PositionId)
             .Include(s => s.Users)
             .ThenInclude(s => s.Role)
+            .Include(s => s.Users)
+            .ThenInclude(s => s.Position)
             .FirstOrDefaultAsync();
         if (position == null) { return dtos; }
         dtos = position.Users.Select(s => s.ToDTO()).ToList();
         return dtos;
     }
 
-    public async Task<bool> UploadImages(long UserId , List<IFormFile> Images)
+
+    public async Task<bool> Update(long UserId, string Email, string Phone, string FullName, bool IsWoman, long RoleId, long FileId)
     {
         SqlUser? user = await _context.Users
             .Where(s => s.Id == UserId && s.IsDeleted == false)
             .FirstOrDefaultAsync();
         if (user == null) { return false; }
-        if (Images != null && Images.Count > 0)
-        {
-            CloudinaryService _cloudinary = new CloudinaryService();
-            string Url = _cloudinary.uploadFile(Images[0]);
-            if (!string.IsNullOrEmpty(Url))
-            {
-                if (!string.IsNullOrEmpty(user.Images)) { _cloudinary.DeleteFile(user.Images); }
-                user.Images = Url;
-            }
-        }
-         _context.Users.Update(user);
-        await _context.SaveChangesAsync();
-        return true;
-    }
-    public async Task<bool> Update(long UserId, string Email,string Phone, string FullName, bool IsWoman, long RoleId, string Images)
-    {
-        SqlUser? user = await _context.Users
-            .Where(s => s.Id == UserId && s.IsDeleted == false)
-            .FirstOrDefaultAsync();
-        if (user == null) { return false;}
-        if(!string.IsNullOrEmpty(Email))
+        if (!string.IsNullOrEmpty(Email))
         {
             bool ExistEmail = await _context.Users
                 .Where(s => s.Email == Email && s.Id != UserId && s.IsDeleted == false)
                 .AnyAsync();
-            if(ExistEmail) { return false;}
+            if (ExistEmail) { return false; }
             user.Email = Email;
         }
-        if(!string.IsNullOrEmpty(Phone)) { user.Phone = Phone; }
-        if(!string.IsNullOrEmpty(FullName)) { user.FullName = FullName; }
-        if(!string.IsNullOrEmpty(Images)) { user.Images = Images; }
+        if (!string.IsNullOrEmpty(Phone)) { user.Phone = Phone; }
+        if (!string.IsNullOrEmpty(FullName)) { user.FullName = FullName; }
+        if (FileId > 0)
+        {
+            //user.Images = Images; 
+            SqlFile? file = await _context.Files.FindAsync(FileId);
+            if (file != null) { user.Images = file; }
+        }
         user.IsWoman = IsWoman;
         user.RoleId = RoleId;
-         _context.Users.Update(user);
+        _context.Users.Update(user);
         await _context.SaveChangesAsync();
         return true;
     }
 
-    public async Task<bool> ChangeUSerPassword(long UserId,  string OldPassword, string NewPassword)
+    public async Task<bool> ChangeUSerPassword(long UserId, string OldPassword, string NewPassword)
     {
         SqlUser? user = await _context.Users
             .Where(s => s.Id == UserId &&
                         s.IsDeleted == false)
             .FirstOrDefaultAsync();
-        if(!string.IsNullOrEmpty(OldPassword) && user.Password != OldPassword) { return false;}
-        if(string.IsNullOrEmpty(NewPassword)) { return false;}
+        if (!string.IsNullOrEmpty(OldPassword) && user.Password != OldPassword) { return false; }
+        if (string.IsNullOrEmpty(NewPassword)) { return false; }
         user.Password = NewPassword;
         await _context.SaveChangesAsync();
         return true;
