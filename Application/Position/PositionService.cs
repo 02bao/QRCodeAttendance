@@ -86,20 +86,6 @@ public class PositionService(
         return pos;
     }
 
-    // xử lý list thì không nên cho phép null, nghĩa là không để dấu ? ở cuối. Chỉ trả về chuỗi rỗng thôi []
-
-    //public async Task<List<PositionItemDTO>> GetPositionsByDepartmentId(long DepartmentId)
-    //{
-    //    List<SqlPosition>? positions = await _context.Positions
-    //        .Where(s => s.Department.Id == DepartmentId && s.IsDeleted == false)
-    //        .Include(s => s.Users)
-    //        .Include(s => s.Department)
-    //        .ToListAsync();
-    //    List<PositionItemDTO> dtos = [];
-    //    if (positions == null || positions.Count == 0) { return dtos; }
-    //    dtos = positions.Select(s => s.ToDTO()).ToList();
-    //    return dtos;
-    //}
     public async Task<List<PositionItemDTO>> GetPositionsByDepartmentId(long DepartmentId)
     {
         SqlDepartment? department = await _context.Departments

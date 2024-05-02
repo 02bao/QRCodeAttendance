@@ -81,20 +81,6 @@ public class UsersController(
         return IsSuccess ? Ok(Id) : BadRequest();
     }
 
-    [HttpPut("Admin/{Id}")]
-    [Role("Admin")]
-    public async Task<IActionResult> ReserUserPassword(long Id, string NewPassword)
-    {
-        bool IsSuccess = await _userService.ResertUserPassword(Id, NewPassword);
-        return IsSuccess ? Ok() : BadRequest();
-    }
-
-    [HttpPut("User/{Id}")]
-    public async Task<IActionResult> ChangeUserPassword(long Id, string OldPassword, string NewPassword)
-    {
-        bool IsSuccess = await _userService.ChangeUSerPassword(Id, OldPassword, NewPassword);
-        return IsSuccess ? Ok() : BadRequest();
-    }
 
 
 }

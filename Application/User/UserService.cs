@@ -127,28 +127,5 @@ public class UserService(DataContext _context) : IUserService
         return true;
     }
 
-    public async Task<bool> ChangeUSerPassword(long UserId, string OldPassword, string NewPassword)
-    {
-        SqlUser? user = await _context.Users
-            .Where(s => s.Id == UserId &&
-                        s.IsDeleted == false)
-            .FirstOrDefaultAsync();
-        if (!string.IsNullOrEmpty(OldPassword) && user.Password != OldPassword) { return false; }
-        if (string.IsNullOrEmpty(NewPassword)) { return false; }
-        user.Password = NewPassword;
-        await _context.SaveChangesAsync();
-        return true;
-    }
 
-    public async Task<bool> ResertUserPassword(long UserId, string NewPassword)
-    {
-        SqlUser? user = await _context.Users
-            .Where(s => s.Id == UserId &&
-                        s.IsDeleted == false)
-            .FirstOrDefaultAsync();
-        if (string.IsNullOrEmpty(NewPassword)) { return false; }
-        user.Password = NewPassword;
-        await _context.SaveChangesAsync();
-        return true;
-    }
 }

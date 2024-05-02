@@ -28,11 +28,11 @@ public class DepartmentService(
     {
         SqlDepartment? department = await _context.Departments
             .Where(s => s.Id == Id && s.IsDeleted == false)
-            .Include(s => s.Position).ThenInclude(s => s.Users)
+            .Include(s => s.Positions).ThenInclude(s => s.Users)
             .FirstOrDefaultAsync();
 
         if (department == null) { return false; }
-        foreach (SqlPosition position in department.Position)
+        foreach (SqlPosition position in department.Positions)
         {
             position.Department = null;
             foreach (SqlUser user in position.Users)
@@ -50,7 +50,7 @@ public class DepartmentService(
     {
         List<SqlDepartment> deps = await _context.Departments
             .Where(s => s.IsDeleted == false)
-            .Include(s => s.Position)
+            .Include(s => s.Positions)
             .Include(s => s.User)
             .ToListAsync();
 
@@ -62,7 +62,7 @@ public class DepartmentService(
     {
         SqlDepartment? department = await _context.Departments
             .Where(s => s.Id == Id && s.IsDeleted == false)
-            .Include(s => s.Position)
+            .Include(s => s.Positions)
             .Include(s => s.User)
             .FirstOrDefaultAsync();
         if (department == null) { return null; }
