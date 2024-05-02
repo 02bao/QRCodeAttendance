@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using QRCodeAttendance.Application.Position;
 using QRCodeAttendance.Domain.Entities;
 using QRCodeAttendance.Infrastructure.Data;
 
@@ -11,7 +10,8 @@ public class DepartmentService(
     public async Task<bool> CreateNewDepartment(string Name, string Description)
     {
         SqlDepartment? department = await _context.Departments
-            .Where(s => s.Name == Name && s.IsDeleted == false).FirstOrDefaultAsync();
+            .Where(s => s.Name == Name && s.IsDeleted == false)
+            .FirstOrDefaultAsync();
 
         if (department != null) { return false; }
         SqlDepartment NewDepartment = new()
@@ -28,16 +28,17 @@ public class DepartmentService(
     {
         SqlDepartment? department = await _context.Departments
             .Where(s => s.Id == Id && s.IsDeleted == false)
-            .Include(s => s.Position)
-            .ThenInclude(s => s.Users)
+            .Include(s => s.Positions).ThenInclude(s => s.Users)
             .FirstOrDefaultAsync();
+
         if (department == null) { return false; }
-        foreach(var position in department.Position)
+        foreach (SqlPosition position in department.Positions)
         {
-            position.Department = null!;
-            foreach(var user in position.Users)
+            position.Department = null;
+            foreach (SqlUser user in position.Users)
             {
-                user.Position = null!;
+                user.Position = null;
+                user.Department = null;
             }
         }
         department.IsDeleted = true;
@@ -49,7 +50,7 @@ public class DepartmentService(
     {
         List<SqlDepartment> deps = await _context.Departments
             .Where(s => s.IsDeleted == false)
-            .Include(s => s.Position)
+            .Include(s => s.Positions)
             .Include(s => s.User)
             .ToListAsync();
 
@@ -61,7 +62,7 @@ public class DepartmentService(
     {
         SqlDepartment? department = await _context.Departments
             .Where(s => s.Id == Id && s.IsDeleted == false)
-            .Include(s => s.Position)
+            .Include(s => s.Positions)
             .Include(s => s.User)
             .FirstOrDefaultAsync();
         if (department == null) { return null; }
@@ -69,21 +70,12 @@ public class DepartmentService(
         return dto;
     }
 
-    public async Task<List<PositionDTO>> GetPositionWithoutDeparment()
-    {
-        List<SqlPosition> position = await _context.Positions
-            .Where(s => s.Department == null &&
-                        s.IsDeleted == false  )
-            .Include(s => s.Users)
-            .ToListAsync();
-        List<PositionDTO> dtos = position.Select(s => s.ToDTO()).ToList();
-        return dtos;
-    }
 
     public async Task<bool> Update(long DepartmentId, string? Name, string? Description)
     {
         SqlDepartment? department = await _context.Departments
-            .Where(s => s.Id == DepartmentId && s.IsDeleted == false).FirstOrDefaultAsync();
+            .Where(s => s.Id == DepartmentId && s.IsDeleted == false)
+            .FirstOrDefaultAsync();
 
         if (department == null) { return false; }
 
@@ -92,7 +84,9 @@ public class DepartmentService(
             bool ExistName = await _context.Departments
                 .Where(s => s.Name == Name && s.Id != DepartmentId && s.IsDeleted == false)
                 .AnyAsync();
+
             if (ExistName) { return false; }
+
             department.Name = Name;
         }
 

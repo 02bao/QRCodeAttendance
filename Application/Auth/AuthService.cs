@@ -10,6 +10,22 @@ namespace QRCodeAttendance.Application.Auth;
 public class AuthService(DataContext _context,
     ITokenService _tokenService) : IAuthService
 {
+    public async Task<bool> ChangePassword(long UserId, string OldPwd, string NewPwd)
+    {
+        SqlUser? user = await _context.Users
+            .Where(s => s.Id == UserId && s.IsDeleted == false)
+            .FirstOrDefaultAsync();
+
+        if (user == null || string.IsNullOrEmpty(OldPwd) || user.Password != OldPwd)
+        {
+            return false;
+        }
+
+        user.Password = NewPwd;
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
     public async Task<UserAuthenticate> Login(string Email, string Password)
     {
         try
@@ -52,4 +68,17 @@ public class AuthService(DataContext _context,
         }
     }
 
+    public async Task<bool> ResetPassword(long UserId, string NewPwd)
+    {
+        SqlUser? user = await _context.Users
+            .Where(s => s.Id == UserId && s.IsDeleted == false)
+            .FirstOrDefaultAsync();
+        if (user == null)
+        {
+            return false;
+        }
+        user.Password = NewPwd;
+        await _context.SaveChangesAsync();
+        return true;
+    }
 }
