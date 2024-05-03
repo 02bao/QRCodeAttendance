@@ -6,7 +6,7 @@ namespace QRCodeAttendance.Presentation.Controllers;
 public class FileController(IFileService fileService) : BaseController
 {
     [HttpPost("")]
-    public async Task<IActionResult> CreateFile([FromForm] IFormFile file)
+    public async Task<IActionResult> CreateFile(IFormFile file)
     {
         long FileId = await fileService.CreateFile(file);
         return FileId > 0 ? Ok(FileId) : BadRequest();
@@ -15,6 +15,6 @@ public class FileController(IFileService fileService) : BaseController
     public async Task<IActionResult> GetFile(long Id)
     {
         string file = await fileService.GetFile(Id);
-        return string.IsNullOrEmpty(file) ? Ok(file) : NotFound();
+        return string.IsNullOrEmpty(file) ? NotFound() : Ok(file);
     }
 }
