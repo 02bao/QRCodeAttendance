@@ -1,4 +1,7 @@
-﻿Hệ thống quản lý điểm danh (attendance) cho nhân viên trong một công ty có nhiều phòng ban, mỗi phòng ban có nhiều vị trí (position), và mỗi vị trí lại có nhiều nhân viên. Hệ thống này cho phép nhân viên điểm danh bằng mã QR code, trong khi admin có khả năng xuất thống kê từ đầu tháng đến cuối tháng, liên quan đến tình trạng đi làm của các phòng ban và nhân viên.
+﻿Hệ thống quản lý điểm danh (attendance) cho nhân viên trong một công ty có nhiều phòng ban, mỗi phòng ban có nhiều vị trí (position), 
+và mỗi vị trí lại có nhiều nhân viên. Hệ thống này cho phép nhân viên điểm danh bằng mã QR code, trong khi admin có khả năng xuất thống kê 
+từ đầu tháng đến cuối tháng, liên quan đến tình trạng đi làm của các phòng ban và nhân viên.
 
 
-Vì server trên Render đang dung bản mien phí -> sau 30p sẽ tự động tắt, khi gọi lại api cần phải bật lại server nên lần này server sẽ chạy hơi lâu mới trả về do phải chờ server restart
+Vì server trên Render đang dung bản mien phí -> sau 30p sẽ tự động tắt, khi gọi lại api cần phải bật lại server nên lần này server 
+sẽ chạy hơi lâu mới trả về do phải chờ server restart
