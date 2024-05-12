@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using QRCodeAttendance.Application.Auth;
 using QRCodeAttendance.Application.Cloud;
+using QRCodeAttendance.Application.Company;
 using QRCodeAttendance.Application.Dashboard;
 using QRCodeAttendance.Application.Department;
 using QRCodeAttendance.Application.Email;
@@ -13,6 +14,7 @@ using QRCodeAttendance.Application.Token;
 using QRCodeAttendance.Application.User;
 using QRCodeAttendance.Infrastructure.Constant;
 using QRCodeAttendance.Infrastructure.Data;
+using QRCodeAttendance.Presentation.Controllers;
 
 namespace QRCodeAttendance;
 public static class Extension
@@ -114,6 +116,7 @@ public static class Extension
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IFileService, FileService>();
         services.AddScoped<ICloudinaryService, CloudinaryService>();
+        services.AddScoped<ICompanyService, CompanyService>();
 
     }
 }

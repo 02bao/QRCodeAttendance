@@ -9,11 +9,11 @@ using QRCodeAttendance.Infrastructure.Data;
 
 #nullable disable
 
-namespace QRCodeAttendance.Infrastructure.Migrations
+namespace QRCodeAttendance.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240502114016_1")]
-    partial class _1
+    [Migration("20240512074108_2")]
+    partial class _2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,41 @@ namespace QRCodeAttendance.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("QRCodeAttendance.Domain.Entities.SqlCompany", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<long?>("ImagesId")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("MaxLateTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ImagesId");
+
+                    b.ToTable("Companies");
+                });
 
             modelBuilder.Entity("QRCodeAttendance.Domain.Entities.SqlDepartment", b =>
                 {
@@ -242,6 +277,15 @@ namespace QRCodeAttendance.Infrastructure.Migrations
                             RoleId = 1L,
                             VerifyToken = ""
                         });
+                });
+
+            modelBuilder.Entity("QRCodeAttendance.Domain.Entities.SqlCompany", b =>
+                {
+                    b.HasOne("QRCodeAttendance.Domain.Entities.SqlFile", "Images")
+                        .WithMany()
+                        .HasForeignKey("ImagesId");
+
+                    b.Navigation("Images");
                 });
 
             modelBuilder.Entity("QRCodeAttendance.Domain.Entities.SqlPosition", b =>
