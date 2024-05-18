@@ -20,4 +20,5 @@ public class SqlUser
     public SqlPosition? Position { get; set; } = null;
     public SqlDepartment? Department { get; set; } = null;
     public List<SqlToken> Tokens { get; set; } = [];
+    public List<SqlAttendace> Attendances { get; set; } = new List<SqlAttendace>();
 }

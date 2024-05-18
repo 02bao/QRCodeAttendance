@@ -1,24 +1,28 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using QRCodeAttendance.Domain.Entities;
 using QRCodeAttendance.Infrastructure.Data;
+using System.Globalization;
 
 namespace QRCodeAttendance.Application.Company;
 
 public class CompanyService(
     DataContext _context) : ICompanyService
 {
-    public async Task<bool> CreateNew(string Name, string Email, DateTime StartTime, DateTime MaxLateTime)
+    public async Task<bool> CreateNew(string Name, string Email, string StartTime, string MaxLateTime)
     {
         SqlCompany? company = await _context.Companies
             .Where(s => s.Name == Name || s.Email == Email)
             .FirstOrDefaultAsync();
-        if(company != null) { return true; }
+        if(company != null) { return false; }
+        TimeSpan startTimeSpan, maxLateTimeSpan;
+        var startTime = TimeSpan.Parse(StartTime);
+        var maxLateTime = TimeSpan.Parse(MaxLateTime);
         SqlCompany NewCompany = new()
         {
             Name = Name,
             Email = Email,
-            StartTime = StartTime,
-            MaxLateTime = MaxLateTime
+            StartTime = startTime,
+            MaxLateTime = maxLateTime
         };
         await _context.Companies.AddAsync(NewCompany);
         await _context.SaveChangesAsync();
@@ -56,7 +60,7 @@ public class CompanyService(
         return dto;
     }
 
-    public async Task<bool> Update(long CompanyId, string Name,string Email, DateTime StartTime, DateTime MaxLateTime, long FileId)
+    public async Task<bool> Update(long CompanyId, string Name,string Email, string StartTime, string MaxLateTime, long FileId)
     {
         SqlCompany? company = await _context.Companies
             .Where(s => s.Id == CompanyId && s.IsDeleted == false)
@@ -78,8 +82,11 @@ public class CompanyService(
             if (ExistName) { return false; }
             company.Email = Email;
         }
-        company.StartTime = StartTime;
-        company.MaxLateTime = MaxLateTime;
+        TimeSpan startTimeSpan, maxLateTimeSpan;
+        var startTime = TimeSpan.Parse(StartTime);
+        var maxLateTime = TimeSpan.Parse(MaxLateTime);
+        company.StartTime = startTime;
+        company.MaxLateTime = maxLateTime;
         if (FileId > 0)
         {
             SqlFile? file = await _context.Files.FindAsync(FileId);

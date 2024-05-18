@@ -10,5 +10,6 @@ public class SqlDepartment
     public string Description { get; set; } = "";
     public List<SqlPosition> Positions { get; set; } = new List<SqlPosition>();
     public List<SqlUser> User { get; set; } = new List<SqlUser>();
+    public List<SqlAttendace> Attendances { get; set; } = new List<SqlAttendace>();
     public bool IsDeleted { get; set; } = false;
 }

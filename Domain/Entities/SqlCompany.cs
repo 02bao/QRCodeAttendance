@@ -9,7 +9,7 @@ public class SqlCompany
     public string Name { get; set; } = "";
     public string Email { get; set; } = "";
     public SqlFile? Images { get; set; } = null;
-    public DateTime StartTime { get; set; } = DateTime.UtcNow;
-    public DateTime MaxLateTime { get; set; } = DateTime.UtcNow;
+    public TimeSpan StartTime { get; set; } = DateTime.Now.TimeOfDay;
+    public TimeSpan MaxLateTime { get; set; } = DateTime.Now.TimeOfDay;
     public bool IsDeleted { get; set; } = false;
 }

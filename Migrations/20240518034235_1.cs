@@ -79,6 +79,29 @@ namespace QRCodeAttendance.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Companies",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Email = table.Column<string>(type: "text", nullable: false),
+                    ImagesId = table.Column<long>(type: "bigint", nullable: true),
+                    StartTime = table.Column<TimeSpan>(type: "interval", nullable: false),
+                    MaxLateTime = table.Column<TimeSpan>(type: "interval", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Companies", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Companies_Files_ImagesId",
+                        column: x => x.ImagesId,
+                        principalTable: "Files",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -124,6 +147,43 @@ namespace QRCodeAttendance.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Attendaces",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    CheckInTime = table.Column<TimeSpan>(type: "interval", nullable: false),
+                    IsPresent = table.Column<bool>(type: "boolean", nullable: false),
+                    CompanyId = table.Column<long>(type: "bigint", nullable: false),
+                    UserId = table.Column<long>(type: "bigint", nullable: false),
+                    DepartmentId = table.Column<long>(type: "bigint", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Status = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Attendaces", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Attendaces_Companies_CompanyId",
+                        column: x => x.CompanyId,
+                        principalTable: "Companies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Attendaces_Departments_DepartmentId",
+                        column: x => x.DepartmentId,
+                        principalTable: "Departments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Attendaces_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Tokens",
                 columns: table => new
                 {
@@ -162,6 +222,26 @@ namespace QRCodeAttendance.Migrations
                 values: new object[] { 1L, null, "admin@gmail.com", "Admin", null, false, true, false, "admin", "", null, 1L, "" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Attendaces_CompanyId",
+                table: "Attendaces",
+                column: "CompanyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Attendaces_DepartmentId",
+                table: "Attendaces",
+                column: "DepartmentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Attendaces_UserId",
+                table: "Attendaces",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Companies_ImagesId",
+                table: "Companies",
+                column: "ImagesId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Positions_DepartmentId",
                 table: "Positions",
                 column: "DepartmentId");
@@ -196,7 +276,13 @@ namespace QRCodeAttendance.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Attendaces");
+
+            migrationBuilder.DropTable(
                 name: "Tokens");
+
+            migrationBuilder.DropTable(
+                name: "Companies");
 
             migrationBuilder.DropTable(
                 name: "Users");

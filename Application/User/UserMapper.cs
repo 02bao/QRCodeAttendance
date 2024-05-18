@@ -20,4 +20,14 @@ public static class UserMapper
             Position = entity.Position?.ToPositionDto()
         };
     }
+
+    public static UserGetAttendace ToAttendaceDTO(this SqlUser entity)
+    {
+        return new UserGetAttendace
+        {
+            Id = entity.Id,
+            FullName = entity.FullName,
+            IsWoman= entity.IsWoman,
+        };
+    }
 }

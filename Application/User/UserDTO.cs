@@ -14,3 +14,10 @@ public class UserDTO
     public RoleDTO Role { get; set; } = null!;
     public PositionDto? Position { get; set; } = null;
 }
+
+public class UserGetAttendace
+{
+    public long Id { get; set; }
+    public string FullName { get; set; } = "";
+    public bool IsWoman { get; set; } = false;
+}

@@ -10,8 +10,8 @@ public class CompanyCreateModel
 {
     public string Name { get; set; } = "";
     public string Email { get; set; } = "";
-    public DateTime StartTime { get; set; } = DateTime.UtcNow;
-    public DateTime MaxLateTime { get; set; } = DateTime.UtcNow;
+    public string StartTime { get; set; } = "";
+    public string MaxLateTime { get; set; } = "";
 }
 
 public class CompanyUpdateModel
@@ -19,6 +19,6 @@ public class CompanyUpdateModel
     public string Name { get; set; } = "";
     public string Email { get; set; } = "";
     public long FileId { get; set; } = -1;
-    public DateTime StartTime { get; set; } = DateTime.UtcNow;
-    public DateTime MaxLateTime { get; set; } = DateTime.UtcNow;
+    public string StartTime { get; set; } = "";
+    public string MaxLateTime { get; set; } = "";
 }

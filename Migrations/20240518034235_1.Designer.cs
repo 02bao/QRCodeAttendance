@@ -12,7 +12,7 @@ using QRCodeAttendance.Infrastructure.Data;
 namespace QRCodeAttendance.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240507140437_1")]
+    [Migration("20240518034235_1")]
     partial class _1
     {
         /// <inheritdoc />
@@ -24,6 +24,81 @@ namespace QRCodeAttendance.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("QRCodeAttendance.Domain.Entities.SqlAttendace", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<TimeSpan>("CheckInTime")
+                        .HasColumnType("interval");
+
+                    b.Property<long>("CompanyId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("DepartmentId")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsPresent")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Attendaces");
+                });
+
+            modelBuilder.Entity("QRCodeAttendance.Domain.Entities.SqlCompany", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<long?>("ImagesId")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<TimeSpan>("MaxLateTime")
+                        .HasColumnType("interval");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<TimeSpan>("StartTime")
+                        .HasColumnType("interval");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ImagesId");
+
+                    b.ToTable("Companies");
+                });
 
             modelBuilder.Entity("QRCodeAttendance.Domain.Entities.SqlDepartment", b =>
                 {
@@ -244,6 +319,42 @@ namespace QRCodeAttendance.Migrations
                         });
                 });
 
+            modelBuilder.Entity("QRCodeAttendance.Domain.Entities.SqlAttendace", b =>
+                {
+                    b.HasOne("QRCodeAttendance.Domain.Entities.SqlCompany", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("QRCodeAttendance.Domain.Entities.SqlDepartment", "Department")
+                        .WithMany("Attendances")
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("QRCodeAttendance.Domain.Entities.SqlUser", "User")
+                        .WithMany("Attendances")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Company");
+
+                    b.Navigation("Department");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("QRCodeAttendance.Domain.Entities.SqlCompany", b =>
+                {
+                    b.HasOne("QRCodeAttendance.Domain.Entities.SqlFile", "Images")
+                        .WithMany()
+                        .HasForeignKey("ImagesId");
+
+                    b.Navigation("Images");
+                });
+
             modelBuilder.Entity("QRCodeAttendance.Domain.Entities.SqlPosition", b =>
                 {
                     b.HasOne("QRCodeAttendance.Domain.Entities.SqlDepartment", "Department")
@@ -295,6 +406,8 @@ namespace QRCodeAttendance.Migrations
 
             modelBuilder.Entity("QRCodeAttendance.Domain.Entities.SqlDepartment", b =>
                 {
+                    b.Navigation("Attendances");
+
                     b.Navigation("Positions");
 
                     b.Navigation("User");
@@ -312,6 +425,8 @@ namespace QRCodeAttendance.Migrations
 
             modelBuilder.Entity("QRCodeAttendance.Domain.Entities.SqlUser", b =>
                 {
+                    b.Navigation("Attendances");
+
                     b.Navigation("Tokens");
                 });
 #pragma warning restore 612, 618

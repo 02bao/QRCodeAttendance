@@ -8,6 +8,6 @@ public class CompanyDTO
     public string Name { get; set; } = "";
     public string Email { get; set; } = "";
     public string Images { get; set; } = "";
-    public DateTime StartTime { get; set; } = DateTime.UtcNow;
-    public DateTime MaxLateTime { get; set; } = DateTime.UtcNow;
+    public TimeSpan StartTime { get; set; } = DateTime.Now.TimeOfDay;
+    public TimeSpan MaxLateTime { get; set; } = DateTime.Now.TimeOfDay;
 }

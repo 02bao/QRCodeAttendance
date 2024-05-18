@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using QRCodeAttendance.Application.Attendace;
 using QRCodeAttendance.Application.Auth;
 using QRCodeAttendance.Application.Cloud;
 using QRCodeAttendance.Application.Company;
@@ -117,6 +118,7 @@ public static class Extension
         services.AddScoped<IFileService, FileService>();
         services.AddScoped<ICloudinaryService, CloudinaryService>();
         services.AddScoped<ICompanyService, CompanyService>();
+        services.AddScoped<IAttendaceService, AttendaceService>();
 
     }
 }
