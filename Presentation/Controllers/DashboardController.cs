@@ -18,4 +18,11 @@ public class DashboardController(IDashboardService _dashboardService) : BaseCont
         List<StatDepartment> dto = await _dashboardService.GetStatisticDepartment();
         return Ok(dto);
     }
+
+    [HttpGet("daily-attendance")]
+    public async Task<ActionResult> GetDailyAttendanceStat(DateTime date)
+    {
+        DailyAttendanceStat stat = await _dashboardService.GetDailyAttendanceStat(date);
+        return Ok(stat);
+    }
 }

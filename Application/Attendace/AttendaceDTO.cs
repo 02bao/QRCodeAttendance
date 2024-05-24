@@ -9,7 +9,7 @@ public class AttendaceDTO
     public long Id { get; set; }
     public TimeSpan CheckInTime { get; set; } = DateTime.UtcNow.TimeOfDay;
     public bool IsPresent { get; set; } = true;
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow.Date;
     public AttendaceStatus Status { get; set; } = AttendaceStatus.OnTime;
     public string StatusString
     {

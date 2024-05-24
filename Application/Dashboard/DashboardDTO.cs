@@ -16,3 +16,11 @@ public class StatDepartment
     public int TotalEmployee { get; set; } = 0;
     public int TotalAttendance { get; set; } = 0;
 }
+
+public class DailyAttendanceStat
+{
+    public int OnTimeCount { get; set; }
+    public int LateCount { get; set; }
+    public int AbsentCount { get; set; }
+    public DateTime StartDate { get; set; } = DateTime.UtcNow.Date;
+}

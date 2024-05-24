@@ -8,7 +8,7 @@ namespace QRCodeAttendance.Application.Attendace;
 public class AttendaceService(
     DataContext _context) : IAttendaceService
 {
-    public async Task<bool> CheckIn(long UserId, long DepartmentId, long CompanyId)
+    public async Task<bool> CheckIn(long UserId,  long CompanyId)
     {
         DateTime CurrentDateTimeUtc = DateTime.Now;
         TimeSpan CurrentTime = new TimeSpan(CurrentDateTimeUtc.Hour, CurrentDateTimeUtc.Minute, CurrentDateTimeUtc.Second);
@@ -16,10 +16,6 @@ public class AttendaceService(
             .Where(s => s.Id == UserId && s.IsDeleted == false)
             .FirstOrDefaultAsync();
         if (user == null) { return false; }
-        var department = await _context.Departments
-            .Include(d => d.User)
-            .FirstOrDefaultAsync(d => d.Id == DepartmentId);
-        if (department == null) { return false; }
         var company = await _context.Companies
             .Where(s => s.Id == CompanyId)
             .FirstOrDefaultAsync();
@@ -43,9 +39,8 @@ public class AttendaceService(
             CheckInTime = CurrentTime,
             IsPresent = Present,
             User = user,
-            Department = department,
             Company = company,
-            CreatedAt = DateTime.UtcNow,
+            CreatedAt = DateTime.UtcNow.Date,
             Status = status,
         };
         _context.Attendaces.Add(NewAttendance);

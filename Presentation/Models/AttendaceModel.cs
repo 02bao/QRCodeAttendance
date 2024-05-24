@@ -9,6 +9,5 @@ public class AttendaceModel
 public class AttendanceCheckInModel
 {
     public long UserId { get; set; }
-    public long DepartmentId { get; set; }
     public long CompanyId { get; set; }
 }

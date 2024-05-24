@@ -10,7 +10,7 @@ public class AttendaceController(
     [HttpPost("")]
     public async Task<IActionResult> CheckIn(AttendanceCheckInModel Model)
     {
-        bool IsSuccess = await _attendaceService.CheckIn(Model.UserId, Model.DepartmentId, Model.CompanyId);
+        bool IsSuccess = await _attendaceService.CheckIn(Model.UserId, Model.CompanyId);
         return IsSuccess? Ok() : BadRequest();
     }
 
