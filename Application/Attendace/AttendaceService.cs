@@ -2,6 +2,7 @@
 using QRCodeAttendance.Application.User;
 using QRCodeAttendance.Domain.Entities;
 using QRCodeAttendance.Infrastructure.Data;
+using System.Globalization;
 
 namespace QRCodeAttendance.Application.Attendace;
 
@@ -48,26 +49,89 @@ public class AttendaceService(
         return true;
     }
 
-    public async Task<List<AttendaceDTO>> GetAll()
-    {
-        List<SqlAttendace>? attendace = await _context.Attendaces
-            .ToListAsync();
-        List<AttendaceDTO> dto = attendace.Select(s => s.ToDTO()).ToList();
-        return dto;
-    }
 
-    public async Task<AttendanceGetByUser> GetByUserId(long USerId)
+    public async Task<AttendanceGetByUser> GetByUserId(long UserId, DateTime date)
     {
+
+        DateTime Startdate = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
+        DateTime EndDate = Startdate.AddDays(1);
         AttendanceGetByUser response = new();
         SqlUser? user = await _context.Users
-            .Where(s => s.Id == USerId &&
+            .Where(s => s.Id == UserId &&
                         s.IsDeleted == false)
             .Include(s => s.Attendances)
             .FirstOrDefaultAsync();
         if(user == null) { return response; }
-        List<AttendaceDTO>? dto = user.Attendances.Select(s => s.ToDTO()).ToList();
+        List<AttendaceDTO>? dto = user.Attendances
+            .Where(s => s.CreatedAt >= Startdate && 
+            s.CreatedAt <= EndDate)
+            .Select(s => s.ToDTO()).ToList();
         response.UserName = user.FullName;
         response.Attendaces = dto;
         return response;
     }
+
+    public async Task<AttendanceGetByUserInMonth> GetByUserInMonth(long UserId, string month)
+    {
+        AttendanceGetByUserInMonth response = new();
+        SqlUser? user = await _context.Users
+            .Where(s => s.Id == UserId &&
+                        s.IsDeleted == false)
+            .FirstOrDefaultAsync();
+        if (user == null) { return response; }
+
+        if (!int.TryParse(month, out int inputMonth) || inputMonth < 1 || inputMonth > 12)
+        {
+            return response;
+        }
+
+        int year = DateTime.UtcNow.Year; 
+        int daysInMonth = DateTime.DaysInMonth(year, inputMonth);
+
+        DateTime monthStartDate = DateTime.SpecifyKind(new DateTime(year, inputMonth, 1), DateTimeKind.Utc); 
+        DateTime monthEndDate = DateTime.SpecifyKind(new DateTime(year, inputMonth, daysInMonth, 23, 59, 59), DateTimeKind.Utc); 
+
+        int onTimeCount = 0;
+        int lateCount = 0;
+        int absentCount = 0;
+        for (int i = 0; i < daysInMonth; i++)
+        {
+            DateTime currentDate = monthStartDate.AddDays(i);
+            DateTime nextDate = monthStartDate.AddDays(i + 1);
+            int dailyOnTimeCount = await _context.Attendaces
+                .CountAsync(a => a.User.Id == UserId && a.CreatedAt >= currentDate && a.CreatedAt < nextDate && a.Status == AttendaceStatus.OnTime);
+
+            if (dailyOnTimeCount > 0)
+            {
+                onTimeCount++;
+                continue;
+            }
+
+            int dailyLateCount = await _context.Attendaces
+                .CountAsync(a => a.User.Id == UserId && a.CreatedAt >= currentDate && a.CreatedAt < nextDate && a.Status == AttendaceStatus.Late);
+
+            if (dailyLateCount > 0)
+            {
+                lateCount++;
+                continue;
+            }
+
+            int dailyAbsentCount = await _context.Attendaces
+                .CountAsync(a => a.User.Id == UserId && a.CreatedAt >= currentDate && a.CreatedAt < nextDate && a.Status == AttendaceStatus.Absent);
+
+            if (dailyAbsentCount > 0)
+            {
+                absentCount++;
+            }
+        }
+        response.UserName = user.FullName;
+        response.OnTimeCount = onTimeCount;
+        response.LateCount = lateCount;
+        response.AbsentCount = absentCount;
+        response.StartDate = monthStartDate;
+        response.EndDate = monthEndDate;
+
+        return response;
+    }
+
 }

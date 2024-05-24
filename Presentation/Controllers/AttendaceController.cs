@@ -15,9 +15,16 @@ public class AttendaceController(
     }
 
     [HttpGet("{Id}")]
-    public async Task<IActionResult> GetByUserId(long Id)
+    public async Task<IActionResult> GetByUserId(long Id, DateTime date)
     {
-        AttendanceGetByUser? dto = await _attendaceService.GetByUserId(Id);
+        AttendanceGetByUser? dto = await _attendaceService.GetByUserId(Id, date);
+        return Ok(dto);
+    }
+
+    [HttpGet("UserInMonth/{Id}")]
+    public async Task<IActionResult> GetByUserIdInMonth(long Id, string month)
+    {
+        AttendanceGetByUserInMonth? dto = await _attendaceService.GetByUserInMonth(Id, month);
         return Ok(dto);
     }
 }

@@ -32,3 +32,13 @@ public class AttendanceGetByUser
     public List<AttendaceDTO> Attendaces { get; set; } = new List<AttendaceDTO>();
 }
 
+public class AttendanceGetByUserInMonth
+{
+    public string UserName { get; set; } = "";
+    public int OnTimeCount { get; set; }
+    public int LateCount { get; set; }
+    public int AbsentCount { get; set; }
+    public DateTime StartDate { get; set; } = DateTime.UtcNow.Date;
+    public DateTime EndDate { get; set; } = DateTime.UtcNow.Date;
+}
+
