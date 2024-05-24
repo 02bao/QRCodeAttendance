@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using QRCodeAttendance.Application.User;
 using QRCodeAttendance.Domain.Entities;
 using QRCodeAttendance.Infrastructure.Data;
 
@@ -50,5 +51,28 @@ public class AttendaceService(
         _context.Attendaces.Add(NewAttendance);
         await _context.SaveChangesAsync();
         return true;
+    }
+
+    public async Task<List<AttendaceDTO>> GetAll()
+    {
+        List<SqlAttendace>? attendace = await _context.Attendaces
+            .ToListAsync();
+        List<AttendaceDTO> dto = attendace.Select(s => s.ToDTO()).ToList();
+        return dto;
+    }
+
+    public async Task<AttendanceGetByUser> GetByUserId(long USerId)
+    {
+        AttendanceGetByUser response = new();
+        SqlUser? user = await _context.Users
+            .Where(s => s.Id == USerId &&
+                        s.IsDeleted == false)
+            .Include(s => s.Attendances)
+            .FirstOrDefaultAsync();
+        if(user == null) { return response; }
+        List<AttendaceDTO>? dto = user.Attendances.Select(s => s.ToDTO()).ToList();
+        response.UserName = user.FullName;
+        response.Attendaces = dto;
+        return response;
     }
 }

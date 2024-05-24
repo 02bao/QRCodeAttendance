@@ -13,13 +13,8 @@ public static class AttendanceMapper
             CheckInTime = entity.CheckInTime,
             IsPresent = entity.IsPresent,
             CreatedAt = entity.CreatedAt,
-            Status = entity.Status,
-            CompanyId = entity.Company.Id,
-            Departments = entity.Department.User
-            .GroupBy(user => user.Department)
-            .Select(group => group.FirstOrDefault().Department.ToAttendanceDTO())
-            .Where(department => department != null)
-            .ToList()
+            Status = entity.Status
         };
     }
+
 }

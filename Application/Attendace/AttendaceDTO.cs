@@ -11,6 +11,24 @@ public class AttendaceDTO
     public bool IsPresent { get; set; } = true;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public AttendaceStatus Status { get; set; } = AttendaceStatus.OnTime;
-    public long CompanyId { get; set; }
-    public List<DepartmentGetAttendance> Departments { get; set; } = new List<DepartmentGetAttendance>();
+    public string StatusString
+    {
+        get
+        {
+            return Status switch
+            {
+                AttendaceStatus.OnTime => "Ontime",
+                AttendaceStatus.Late => "Late",
+                AttendaceStatus.Absent => "Absent",
+                _ => "Unknown"
+            };
+        }
+    }
 }
+
+public class AttendanceGetByUser
+{
+    public string UserName { get; set; } = "";
+    public List<AttendaceDTO> Attendaces { get; set; } = new List<AttendaceDTO>();
+}
+

@@ -14,4 +14,5 @@ public class StatDepartment
 {
     public string Department { get; set; } = "";
     public int TotalEmployee { get; set; } = 0;
+    public int TotalAttendance { get; set; } = 0;
 }

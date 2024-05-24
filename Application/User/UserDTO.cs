@@ -1,4 +1,5 @@
-﻿using QRCodeAttendance.Application.Position;
+﻿using QRCodeAttendance.Application.Attendace;
+using QRCodeAttendance.Application.Position;
 using QRCodeAttendance.Application.Role;
 
 namespace QRCodeAttendance.Application.User;
@@ -15,9 +16,11 @@ public class UserDTO
     public PositionDto? Position { get; set; } = null;
 }
 
-public class UserGetAttendace
-{
-    public long Id { get; set; }
-    public string FullName { get; set; } = "";
-    public bool IsWoman { get; set; } = false;
-}
+//public class UserGetAttendance
+//{
+//    public string FullName { get; set; } = "";
+//    public bool IsWoman { get; set; } = false;
+//    public List<AttendanceGetByUser> Attendance { get; set; } = new List<AttendanceGetByUser>();
+//}
+
+

@@ -11,7 +11,6 @@ public class UserCreateModel
     public string FullName { get; set; } = "";
     public string Password { get; set; } = "";
     public string Phone { get; set; } = "";
-    public string VerifyToken { get; set; } = string.Empty;
     public bool IsWoman { get; set; } = false;
     public long RoleId { get; set; }
 }

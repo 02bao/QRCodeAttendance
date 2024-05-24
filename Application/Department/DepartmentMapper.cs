@@ -17,13 +17,5 @@ public static class DepartmentMapper
         };
     }
 
-    public static DepartmentGetAttendance ToAttendanceDTO(this SqlDepartment entity)
-    {
-        return new DepartmentGetAttendance
-        {
-            Id = entity.Id,
-            Name = entity.Name,
-            User = entity.User.Select(s => s.ToAttendaceDTO()).ToList(),
-        };
-    }
+   
 }

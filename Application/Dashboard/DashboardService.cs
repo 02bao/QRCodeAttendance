@@ -16,6 +16,7 @@ public class DashboardService(
             {
                 Department = s.Name,
                 TotalEmployee = s.User.Count,
+                TotalAttendance = s.User.Sum(u => u.Attendances.Count)
             })
             .OrderByDescending(s => s.TotalEmployee)
             .Take(6)

@@ -1,4 +1,5 @@
-﻿using QRCodeAttendance.Application.Position;
+﻿using QRCodeAttendance.Application.Attendace;
+using QRCodeAttendance.Application.Position;
 using QRCodeAttendance.Application.Role;
 using QRCodeAttendance.Domain.Entities;
 
@@ -21,13 +22,14 @@ public static class UserMapper
         };
     }
 
-    public static UserGetAttendace ToAttendaceDTO(this SqlUser entity)
-    {
-        return new UserGetAttendace
-        {
-            Id = entity.Id,
-            FullName = entity.FullName,
-            IsWoman= entity.IsWoman,
-        };
-    }
+    //public static UserGetAttendance ToAttendanceDTO(this SqlUser entity)
+    //{
+    //    return new UserGetAttendance
+    //    {
+    //        FullName = entity.FullName,
+    //        IsWoman = entity.IsWoman,
+    //        Attendance = entity.Attendances.Select(s => s.ToUserDTO()).ToList(),
+    //    };
+    //}
+
 }
