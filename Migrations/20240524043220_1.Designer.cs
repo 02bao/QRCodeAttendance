@@ -12,7 +12,7 @@ using QRCodeAttendance.Infrastructure.Data;
 namespace QRCodeAttendance.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240518034235_1")]
+    [Migration("20240524043220_1")]
     partial class _1
     {
         /// <inheritdoc />

@@ -9,7 +9,8 @@ public class AttendaceService(
 {
     public async Task<bool> CheckIn(long UserId, long DepartmentId, long CompanyId)
     {
-        TimeSpan today = DateTime.Now.TimeOfDay;
+        DateTime CurrentDateTimeUtc = DateTime.Now;
+        TimeSpan CurrentTime = new TimeSpan(CurrentDateTimeUtc.Hour, CurrentDateTimeUtc.Minute, CurrentDateTimeUtc.Second);
         SqlUser? user = await _context.Users
             .Where(s => s.Id == UserId && s.IsDeleted == false)
             .FirstOrDefaultAsync();
@@ -22,28 +23,28 @@ public class AttendaceService(
             .Where(s => s.Id == CompanyId)
             .FirstOrDefaultAsync();
         if (company == null) { return false; }
-        TimeSpan maxLateTime = company.MaxLateTime;
+        TimeSpan CompanyStartTime = company.StartTime;
+        TimeSpan MaxLateTime = company.MaxLateTime;
         var status = AttendaceStatus.OnTime;
         bool Present = true;
-
-        if (today > company.StartTime.Add(maxLateTime))
+        if (CurrentTime > CompanyStartTime.Add(MaxLateTime))
         {
             status = AttendaceStatus.Absent;
             Present = false;
         }
-        else if (today > company.StartTime)
+        else if (CurrentTime > CompanyStartTime)
         {
             status = AttendaceStatus.Late;
         }
 
         SqlAttendace NewAttendance = new()
         {
-            CheckInTime = today,
+            CheckInTime = CurrentTime,
             IsPresent = Present,
             User = user,
             Department = department,
             Company = company,
-            CreatedAt = DateTime.Now,
+            CreatedAt = DateTime.UtcNow,
             Status = status,
         };
         _context.Attendaces.Add(NewAttendance);
