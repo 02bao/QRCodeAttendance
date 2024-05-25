@@ -1,4 +1,5 @@
-﻿using QRCodeAttendance.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using QRCodeAttendance.Domain.Entities;
 using QRCodeAttendance.Infrastructure.Data;
 using QRCodeAttendance.Presentation.Models;
 
@@ -7,6 +8,16 @@ namespace QRCodeAttendance.Application.Notification;
 public class NotificationService(
     DataContext _context) : INotificationService
 {
+    public async Task<List<NotificationDTO>> GetNotiInDay(DateTime date)
+    {
+        DateTime Startdate = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
+        List<SqlNotification>? notifications = await _context.Notifications
+            .Where(s => s.CreateAt == Startdate.Date)
+            .ToListAsync();
+        List<NotificationDTO>? dto = notifications.Select(s => s.ToDTO()).ToList();
+        return dto;
+    }
+
     public async Task<bool> NotifyCheckIn(SqlUser user, DateTime checkInTime)
     {
         await CreateNewNoti(user, checkInTime);
