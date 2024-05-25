@@ -18,6 +18,7 @@ public class DataContext : DbContext
     public DbSet<SqlFile> Files { get; set; }
     public DbSet<SqlCompany> Companies { get; set; }
     public DbSet<SqlAttendace> Attendaces { get; set; }
+    public DbSet<SqlNotification> Notifications { get; set; }
 
     public Random random = new();
     public string RandomString(int length)

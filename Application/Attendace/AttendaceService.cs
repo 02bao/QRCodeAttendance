@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using QRCodeAttendance.Application.Notification;
 using QRCodeAttendance.Application.User;
 using QRCodeAttendance.Domain.Entities;
 using QRCodeAttendance.Infrastructure.Data;
@@ -7,7 +8,8 @@ using System.Globalization;
 namespace QRCodeAttendance.Application.Attendace;
 
 public class AttendaceService(
-    DataContext _context) : IAttendaceService
+    DataContext _context,
+    INotificationService _notificationService) : IAttendaceService
 {
     public async Task<bool> CheckIn(long UserId,  long CompanyId)
     {
@@ -46,6 +48,7 @@ public class AttendaceService(
         };
         _context.Attendaces.Add(NewAttendance);
         await _context.SaveChangesAsync();
+        await _notificationService.NotifyCheckIn(user, CurrentDateTimeUtc);
         return true;
     }
 

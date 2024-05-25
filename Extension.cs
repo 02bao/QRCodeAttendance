@@ -10,6 +10,7 @@ using QRCodeAttendance.Application.Dashboard;
 using QRCodeAttendance.Application.Department;
 using QRCodeAttendance.Application.Email;
 using QRCodeAttendance.Application.File;
+using QRCodeAttendance.Application.Notification;
 using QRCodeAttendance.Application.Position;
 using QRCodeAttendance.Application.Token;
 using QRCodeAttendance.Application.User;
@@ -119,6 +120,7 @@ public static class Extension
         services.AddScoped<ICloudinaryService, CloudinaryService>();
         services.AddScoped<ICompanyService, CompanyService>();
         services.AddScoped<IAttendaceService, AttendaceService>();
+        services.AddScoped<INotificationService, NotificationService>();
 
     }
 }
