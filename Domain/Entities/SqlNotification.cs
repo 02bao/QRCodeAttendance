@@ -6,6 +6,5 @@ public class SqlNotification
     public string Message { get; set; } = "";
     public bool IsRead { get; set; } = false;
     public SqlUser User { get; set; } = new SqlUser();
-    public long UserId { get; set; }
     public DateTime CreateAt { get; set; } = DateTime.UtcNow.Date;
 }

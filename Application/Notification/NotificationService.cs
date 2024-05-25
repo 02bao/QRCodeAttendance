@@ -21,7 +21,7 @@ public class NotificationService(
             Message = message,
             CreateAt = DateTime.UtcNow.Date,
             IsRead = false,
-            UserId = user.Id,
+            User = user,
         };
         _context.Notifications.Add(NewNoti);
         await _context.SaveChangesAsync();

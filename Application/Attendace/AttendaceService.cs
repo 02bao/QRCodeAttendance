@@ -15,6 +15,11 @@ public class AttendaceService(
     {
         DateTime CurrentDateTimeUtc = DateTime.Now;
         TimeSpan CurrentTime = new TimeSpan(CurrentDateTimeUtc.Hour, CurrentDateTimeUtc.Minute, CurrentDateTimeUtc.Second);
+        bool HasCheckInToday = await _context.Attendaces
+            .Where(s => s.User.Id == UserId &&
+                        s.CreatedAt == DateTime.UtcNow.Date)
+            .AnyAsync();
+        if (HasCheckInToday) { return false; }
         SqlUser? user = await _context.Users
             .Where(s => s.Id == UserId && s.IsDeleted == false)
             .FirstOrDefaultAsync();
