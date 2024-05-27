@@ -6,4 +6,6 @@ public interface INotificationService
 {
     Task<bool> NotifyCheckIn(SqlUser user, DateTime checkInTime);
     Task<List<NotificationDTO>> GetNotiInDay(DateTime date);
+    Task<bool> HasRead(long NotificationId);
+    Task<bool> Delete(long Id);
 }

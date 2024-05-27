@@ -8,6 +8,17 @@ namespace QRCodeAttendance.Application.Notification;
 public class NotificationService(
     DataContext _context) : INotificationService
 {
+    public async Task<bool> Delete(long Id)
+    {
+        SqlNotification? noti = await _context.Notifications
+            .Where(s => s.Id == Id)
+            .FirstOrDefaultAsync();
+        if(noti == null) { return false; }
+        _context.Notifications.Remove(noti);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
     public async Task<List<NotificationDTO>> GetNotiInDay(DateTime date)
     {
         DateTime Startdate = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
@@ -16,6 +27,18 @@ public class NotificationService(
             .ToListAsync();
         List<NotificationDTO>? dto = notifications.Select(s => s.ToDTO()).ToList();
         return dto;
+    }
+
+    public async Task<bool> HasRead(long NotificationId)
+    {
+        SqlNotification? noti = await _context.Notifications
+            .Where(s => s.Id == NotificationId && 
+                        s.IsRead == false)
+            .FirstOrDefaultAsync();
+        if(noti == null) { return false; }
+        noti.IsRead = true;
+        await _context.SaveChangesAsync();
+        return true;
     }
 
     public async Task<bool> NotifyCheckIn(SqlUser user, DateTime checkInTime)
