@@ -12,6 +12,7 @@ using QRCodeAttendance.Application.Email;
 using QRCodeAttendance.Application.File;
 using QRCodeAttendance.Application.Notification;
 using QRCodeAttendance.Application.Position;
+using QRCodeAttendance.Application.Role;
 using QRCodeAttendance.Application.Token;
 using QRCodeAttendance.Application.User;
 using QRCodeAttendance.Infrastructure.Constant;
@@ -121,6 +122,7 @@ public static class Extension
         services.AddScoped<ICompanyService, CompanyService>();
         services.AddScoped<IAttendaceService, AttendaceService>();
         services.AddScoped<INotificationService, NotificationService>();
+        services.AddScoped<IRoleService, RoleService>();
 
     }
 }

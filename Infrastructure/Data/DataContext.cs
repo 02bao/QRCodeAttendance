@@ -41,7 +41,9 @@ public class DataContext : DbContext
         modelBuilder.Entity<SqlRole>()
             .HasData(
                 new SqlRole { Id = 1, Name = "Admin" },
-                new SqlRole { Id = 2, Name = "User" });
+                new SqlRole { Id = 2, Name = "Manager" },
+                new SqlRole { Id = 3, Name = "User" },
+                new SqlRole { Id = 4, Name = "Guest" });
         modelBuilder.Entity<SqlUser>()
             .HasData(
                 new SqlUser
