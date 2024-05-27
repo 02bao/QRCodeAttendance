@@ -8,6 +8,19 @@ namespace QRCodeAttendance.Application.Notification;
 public class NotificationService(
     DataContext _context) : INotificationService
 {
+    public async Task<bool> AllNotiHasRead()
+    {
+        List<SqlNotification>? allnoti = await _context.Notifications
+            .Where(s => s.IsRead == false)
+            .ToListAsync();
+        foreach (var noti in allnoti)
+        {
+            noti.IsRead = true;
+        }
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
     public async Task<bool> Delete(long Id)
     {
         SqlNotification? noti = await _context.Notifications
@@ -15,6 +28,26 @@ public class NotificationService(
             .FirstOrDefaultAsync();
         if(noti == null) { return false; }
         _context.Notifications.Remove(noti);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<bool> DeleteAllNoti()
+    {
+        List<SqlNotification>? allnoti = await _context.Notifications
+            .ToListAsync();
+         _context.Notifications.RemoveRange(allnoti);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<bool> DeleteAllNotiHasRead()
+    {
+        List<SqlNotification>? allnotihasread = await _context.Notifications
+            .Where(s => s.IsRead == true)
+            .ToListAsync();
+        if(allnotihasread == null) { return false; }
+        _context.Notifications.RemoveRange(allnotihasread);
         await _context.SaveChangesAsync();
         return true;
     }

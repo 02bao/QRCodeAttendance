@@ -23,10 +23,32 @@ public class NotificationController(
         return IsSuccess ? Ok() : BadRequest();
     }
 
+    [HttpPut("AllNotiHasRead")]
+    public async Task<IActionResult> AllNotiHasRead()
+    {
+        bool IsSuccess = await _notificationService.AllNotiHasRead();
+        return IsSuccess ? Ok() : BadRequest();
+    }
+
     [HttpDelete("{Id}")]
     public async Task<IActionResult> Delete(long Id)
     {
         bool IsSuccess = await _notificationService.Delete(Id);
         return IsSuccess ? Ok() : BadRequest();
     }
+
+    [HttpDelete("")]
+    public async Task<IActionResult> DeleteAllNoti()
+    {
+        bool IsSuccess = await _notificationService.DeleteAllNoti();
+        return IsSuccess ? Ok() : BadRequest();
+    }
+
+    [HttpDelete("AllNotiHasRead")]
+    public async Task<IActionResult> DeleteAllNotiHasRead()
+    {
+        bool IsSuccess = await _notificationService.DeleteAllNotiHasRead();
+        return IsSuccess ? Ok() : BadRequest();
+    }
+
 }
